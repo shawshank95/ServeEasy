@@ -75,17 +75,19 @@ public class ProviderHome extends AppCompatActivity {
                 params.put("user_id",UserDetails.getInstance().userId);
                 if(isChecked) {
                     params.put("availability_status", "1");
+                    editor.putBoolean("available",isChecked);
+                    editor.commit();
                 }
                 else{
                     params.put("availability_status", "0");
+                    editor.putBoolean("available",isChecked);
+                    editor.commit();
                 }
                 VolleyNetworkManager.getInstance(getApplicationContext()).makeRequest(params, "availability.php",
                         new VolleyNetworkManager.Callback() {
                             @Override
                             public void onSuccess(String response) {
                                 Log.d("Availability",response);
-                                editor.putBoolean("available",isChecked);
-                                editor.commit();
                             }
                         });
             }
@@ -120,6 +122,7 @@ public class ProviderHome extends AppCompatActivity {
                 else if(id == R.id.provider_logout){
                     editor.putString("username", "guest");
                     editor.putBoolean("loggedin", false);
+                    editor.putBoolean("available",false);
                     editor.commit();
                     startActivity(new Intent(ProviderHome.this, Login.class));
                     finish();
