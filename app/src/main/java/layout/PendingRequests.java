@@ -132,7 +132,7 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
             arrayOfItems.remove(position);
             requestsList.invalidateViews();
             //Log.d("newListSize", arrayOfItems.size()+"");
-            //Toast.makeText(getActivity(), "serverUpdate "+position+arrayOfItems.size(), Toast.LENGTH_SHORT).show();
+
         }
     }
 
