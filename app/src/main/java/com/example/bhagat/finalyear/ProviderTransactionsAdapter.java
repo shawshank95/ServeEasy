@@ -28,7 +28,6 @@ public class ProviderTransactionsAdapter extends RecyclerView
     public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.provider_transactions_card_view_row, parent, false);
-
         DataObjectHolder dataObjectHolder = new DataObjectHolder(view);
         return dataObjectHolder;
     }
@@ -40,6 +39,7 @@ public class ProviderTransactionsAdapter extends RecyclerView
             holder.categoryName.setText(arrayOfItems.get(position).jOb.getString("category_name"));
             holder.quantity.setText("Qty: "+arrayOfItems.get(position).jOb.getString("quantity"));
             holder.status.setText(arrayOfItems.get(position).jOb.getString("status"));
+            holder.date.setText(arrayOfItems.get(position).jOb.getString("date"));
             Log.d("transactions_quant", arrayOfItems.get(position).jOb.getString("quantity"));
         }
         catch (Exception e){
@@ -65,14 +65,15 @@ public class ProviderTransactionsAdapter extends RecyclerView
             implements View
             .OnClickListener {
         TextView consumerName, categoryName, quantity;
-        TextView status;
+        TextView status,date;
 
         public DataObjectHolder(View itemView) {
             super(itemView);
             consumerName = (TextView) itemView.findViewById(R.id.consumer_name);
             categoryName = (TextView) itemView.findViewById(R.id.category_name);
             status = (TextView) itemView.findViewById(R.id.status);
-            quantity = (TextView) itemView.findViewById(R.id.provider_quantity);
+            date = (TextView) itemView.findViewById(R.id.date);
+            quantity = (TextView) itemView.findViewById(R.id.quantity);
             Log.i("LOG_TAG", "Adding Listener");
             itemView.setOnClickListener(this);
         }

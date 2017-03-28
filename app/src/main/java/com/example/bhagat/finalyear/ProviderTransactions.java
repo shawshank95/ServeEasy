@@ -58,8 +58,9 @@ public class ProviderTransactions extends Fragment {
     void getDataSet() {
         Map<String, String> params = new HashMap<>();
         params.put("provider_id",UserDetails.getInstance().providerId);
+        String url = UserDetails.getInstance().url + "fetch_provider_transactions.php";
         VolleyNetworkManager.getInstance(getContext()).makeRequest(params,
-                "fetch_provider_transactions.php", new VolleyNetworkManager.Callback() {
+                url, new VolleyNetworkManager.Callback() {
                     @Override
                     public void onSuccess(String response) {
                         Log.d("ProviderTransactions", response);

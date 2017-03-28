@@ -99,20 +99,10 @@ public class ConsumerHome extends AppCompatActivity {
                     editor.putString("username", "guest");
                     editor.putBoolean("loggedin", false);
                     editor.apply();
+                    stopService(new Intent(ConsumerHome.this, ConsumerBackgroundService.class));
                     startActivity(new Intent(ConsumerHome.this, Login.class));
                     finish();
                 }
-                /*
-                else if (id == R.id.logout) {
-                    //    backgrnd_frag_is_home = false;
-                    editor.putString("username", "guest");
-                    editor.putBoolean("loggedin", false);
-                    editor.apply();
-                    Intent i = new Intent(Requests.this, Login.class);
-                    startActivity(i);
-                    finish();
-                    return true;
-                }*/
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.mydrawerlayout);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;

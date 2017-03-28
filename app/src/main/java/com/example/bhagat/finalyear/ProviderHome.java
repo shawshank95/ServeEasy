@@ -83,7 +83,8 @@ public class ProviderHome extends AppCompatActivity {
                     editor.putBoolean("available",isChecked);
                     editor.commit();
                 }
-                VolleyNetworkManager.getInstance(getApplicationContext()).makeRequest(params, "availability.php",
+                String url = UserDetails.getInstance().url + "availability.php";
+                VolleyNetworkManager.getInstance(getApplicationContext()).makeRequest(params, url,
                         new VolleyNetworkManager.Callback() {
                             @Override
                             public void onSuccess(String response) {
@@ -113,7 +114,6 @@ public class ProviderHome extends AppCompatActivity {
                     ft.replace(R.id.dummy, accountSettingsFragment);
                     ft.commit();
                 }
-                //Todo: conditional statement to check if ProviderTransactions or ConsumerTransactions
                 else if (id == R.id.provider_transactions) {
                     FragmentTransaction ft = manager.beginTransaction();
                     ft.replace(R.id.dummy, providerTransactionsFragment);
@@ -124,6 +124,7 @@ public class ProviderHome extends AppCompatActivity {
                     editor.putBoolean("loggedin", false);
                     editor.putBoolean("available",false);
                     editor.commit();
+                    stopService(new Intent(ProviderHome.this, ProviderBackgroundService.class));
                     startActivity(new Intent(ProviderHome.this, Login.class));
                     finish();
                 }

@@ -51,7 +51,7 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
     ListView requestsList;
     ArrayList<ListData> arrayOfItems;
     RequestsAdapter adapter;
-    String request_id = "";
+    String request_id = "",consumerAddress;
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
@@ -84,10 +84,11 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
                 String quantity = quantityView.getText().toString();
                 try {
                     request_id = arrayOfItems.get(i).jOb.getString("request_id");
+                    consumerAddress = arrayOfItems.get(i).jOb.getString("address");
                 }
                 catch (Exception e){
                 }
-                showDetails(i,consumerName,categoryName,distance,quantity,request_id);
+                showDetails(i,consumerName,categoryName,distance,quantity,request_id,consumerAddress);
             }
         });
 
@@ -111,7 +112,7 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
         RequestDetails dialog = new RequestDetails();
         dialog.show(getFragmentManager(), "dialogTag");
     }*/
-    private void showDetails(int position,String consumerName,String categoryName,String distance, String quantity,String request_id) {
+    private void showDetails(int position,String consumerName,String categoryName,String distance, String quantity,String request_id,String address) {
         FragmentManager fm = getFragmentManager();
         Bundle args = new Bundle();
         args.putString("consumerName",consumerName);
@@ -119,6 +120,7 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
         args.putString("quantity",quantity);
         args.putString("distance",distance);
         args.putString("request_id",request_id);
+        args.putString("address",address);
         args.putInt("listItemPosition", position);
         RequestDetails details = RequestDetails.newInstance();
         details.setTargetFragment(this, 0);
@@ -142,33 +144,17 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
     }
 
     public void makeRequestStatusPending(){
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        Map<String, String> params = new HashMap<>();
+        params.put("status","2");
+        params.put("request_id",request_id);
         String url = UserDetails.getInstance().url + "update_request_status.php";
-        StringRequest request = new StringRequest( Request.Method.POST, url,
-                new Response.Listener<String>() {
+        VolleyNetworkManager.getInstance(getContext()).makeRequest(params, url,
+                new VolleyNetworkManager.Callback() {
                     @Override
-                    public void onResponse(String response) {
-                        Log.d("markRequestPending", response);
+                    public void onSuccess(String response) {
+                        Log.d("makeStatusCancelled",response);
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
-                        Log.d("markRequestSeen error",error.toString());
-                    }
-                }
-        )
-        {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("status","2");
-                params.put("request_id",request_id);
-                return params;
-            }
-        };
-        requestQueue.add(request);
+                });
     }
 
 
@@ -176,7 +162,8 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
         Map<String, String> params = new HashMap<>();
         params.put("status","4");
         params.put("request_id",request_id);
-        VolleyNetworkManager.getInstance(getContext()).makeRequest(params, "update_request_status.php",
+        String url = UserDetails.getInstance().url + "update_request_status.php";
+        VolleyNetworkManager.getInstance(getContext()).makeRequest(params, url,
                 new VolleyNetworkManager.Callback() {
                     @Override
                     public void onSuccess(String response) {
@@ -193,12 +180,14 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
 
     void getRequests(){
         swipeRefreshLayout.setRefreshing(true);
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        Map<String, String> params = new HashMap<>();
+        params.put("provider_id", UserDetails.getInstance().providerId);
+        params.put("type","active");
         String url = UserDetails.getInstance().url + "fetch_requests.php";
-        StringRequest request = new StringRequest( Request.Method.POST, url,
-                new Response.Listener<String>() {
+        VolleyNetworkManager.getInstance(getContext()).makeRequest(params, url,
+                new VolleyNetworkManager.Callback() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onSuccess(String response) {
                         Log.d("ActiveRequests response", response);
                         try {
                             if(arrayOfItems!=null)
@@ -208,38 +197,12 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
                                 JSONObject jOb = jsonArray.getJSONObject(i);
                                 arrayOfItems.add(new ListData(jOb));
                             }
+                            adapter.notifyDataSetChanged();
+                            swipeRefreshLayout.setRefreshing(false);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        //todo duplicacy in instance of RequestAdapter
-                        try{
-                         ;
-                        }catch (Exception e){
-                            Toast.makeText(getActivity(),"Currently you have no new requests.",Toast.LENGTH_LONG).show();
-                        }
-                        adapter.notifyDataSetChanged();
-                        swipeRefreshLayout.setRefreshing(false);
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("fetch_requests error",error.toString());
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }
-        )
-        {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("provider_id", UserDetails.getInstance().providerId);
-                params.put("type","active");
-                return params;
-            }
-        } ;
-        requestQueue.add(request);
+                });
     }
-
-
 }

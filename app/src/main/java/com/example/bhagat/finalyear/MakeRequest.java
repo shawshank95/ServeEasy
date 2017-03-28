@@ -160,114 +160,77 @@ public class MakeRequest extends AppCompatActivity {
     ///volley
     public void inflateCategorySpinner(){
         String url = UserDetails.getInstance().url+"fetch_categories.php";
-          StringRequest request = new StringRequest(Request.Method.POST,url,
-            new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
-                    Log.d("Spinner Response", response);
+        Map<String, String> params = new HashMap<>();
+        params.put("service_id", serviceIdVal);
+        VolleyNetworkManager.getInstance(getApplicationContext()).makeRequest(params,
+                url, new VolleyNetworkManager.Callback() {
+                    @Override
+                    public void onSuccess(String response) {
+                        Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
+                        Log.d("Spinner Response", response);
 
-                    ArrayList<String> categoryArrayList = new ArrayList<String>();
+                        ArrayList<String> categoryArrayList = new ArrayList<>();
 
-                    try {
-                        JSONObject jOb = new JSONObject(response);
-                        jArr = jOb.getJSONArray("category_list");
-                        for(int i=0; i<jArr.length(); i++){
-                            categoryArrayList.add(jArr.getJSONObject(i).getString("category_name"));
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(MakeRequest.this,
-                            android.R.layout.simple_spinner_dropdown_item, categoryArrayList);
-                    selectCategory.setAdapter(categoryAdapter);
-                    selectCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                            try {
-                                selectedCategoryId = (String) jArr.getJSONObject(position).getString("category_id");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                        try {
+                            JSONObject jOb = new JSONObject(response);
+                            jArr = jOb.getJSONArray("category_list");
+                            for(int i=0; i<jArr.length(); i++){
+                                categoryArrayList.add(jArr.getJSONObject(i).getString("category_name"));
                             }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
+                        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(MakeRequest.this,
+                                android.R.layout.simple_spinner_dropdown_item, categoryArrayList);
+                        selectCategory.setAdapter(categoryAdapter);
+                        selectCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                                try {
+                                    selectedCategoryId = (String) jArr.getJSONObject(position).getString("category_id");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            @Override
+                            public void onNothingSelected(AdapterView<?> adapterView) {
+                                Log.d("spinner category","nothing selected");
+                            }
+                        });
 
-                        @Override
-                        public void onNothingSelected(AdapterView<?> adapterView) {
-                            Log.d("spinner category","nothing selected");
-                        }
-                    });
-
-                }
-            },
-            new Response.ErrorListener(){
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_LONG).show();
-                }
-            }
-        ) {
-              @Override
-              protected Map<String, String> getParams()
-              {
-                  Map<String, String> params = new HashMap<String, String>();
-                  params.put("service_id", serviceIdVal);
-                  return params;
-              }
-          };
-        requestQueue.add(request);
+                    }
+                });
     }
 
     public  void  submitRequst() {
-        final ProgressDialog progressDialog;
+
         String url = UserDetails.getInstance().url+"make_request.php";
-        // prepare the Request
-        //-> POST REQUEST USING VOLLEY
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("service_id", serviceIdVal);
+        params.put("consumer_id", UserDetails.getInstance().consumerId);
+        params.put("category_id", selectedCategoryId);
+        params.put("quantity", quantity.getText().toString());
+        params.put("consumer_locx", UserDetails.getInstance().latitude);
+        params.put("consumer_locy", UserDetails.getInstance().longitude);
+        params.put("address",address.getText().toString());
+        params.put("due_day", String.valueOf(dueDay));
+        params.put("due_month", String.valueOf(dueMonth));
+        params.put("due_year", String.valueOf(dueYear));
+        params.put("day", String.valueOf(day));
+        params.put("month", String.valueOf(month));
+        params.put("year", String.valueOf(year));
+        VolleyNetworkManager.getInstance(getApplicationContext()).makeRequest(params,
+                url, new VolleyNetworkManager.Callback() {
                     @Override
-                    public void onResponse(String response) {
-                        // response
+                    public void onSuccess(String response) {
                         Log.d("Response123", response);
                         Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getApplicationContext(),ConsumerHome.class);
                         startActivity(intent);
                         /// /new Intent(getApplicationContext(),NearbyServices.class));
-                        progressDialog.hide();
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        Toast.makeText(getApplicationContext(),error.getMessage(), Toast.LENGTH_LONG).show();
-                        progressDialog.hide();
-                    }
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams()
-            {
-                Map<String, String> params = new HashMap<>();
-                params.put("service_id", serviceIdVal);
-                params.put("consumer_id", UserDetails.getInstance().consumerId);
-                params.put("category_id", selectedCategoryId);
-                params.put("quantity", quantity.getText().toString());
-                params.put("consumer_locx", UserDetails.getInstance().latitude);
-                params.put("consumer_locy", UserDetails.getInstance().longitude);
-                params.put("address",address.getText().toString());
-                params.put("due_day", String.valueOf(dueDay));
-                params.put("due_month", String.valueOf(dueMonth));
-                params.put("due_year", String.valueOf(dueYear));
-                params.put("day", String.valueOf(day));
-                params.put("month", String.valueOf(month));
-                params.put("year", String.valueOf(year));
-                return params;
-            }
-        };
-        requestQueue.add(postRequest);
+                });
     }
 
 

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -95,11 +96,12 @@ public class ConsumerTransactions extends Fragment {
 
 
     void getDataSet() {
-
         Map<String, String> params = new HashMap<>();
         params.put("consumer_id",UserDetails.getInstance().consumerId);
+        Toast.makeText(getActivity(),UserDetails.getInstance().consumerId+"",Toast.LENGTH_LONG).show();
+        String url = UserDetails.getInstance().url + "fetch_consumer_transactions.php";
         VolleyNetworkManager.getInstance(getContext()).makeRequest(params,
-                "fetch_consumer_transactions.php", new VolleyNetworkManager.Callback() {
+                url, new VolleyNetworkManager.Callback() {
                     @Override
                     public void onSuccess(String response) {
                         Log.d("ConsumerTransactions", response);
@@ -114,7 +116,6 @@ public class ConsumerTransactions extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 });
 

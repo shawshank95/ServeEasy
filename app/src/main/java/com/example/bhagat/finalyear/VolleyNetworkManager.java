@@ -65,18 +65,18 @@ public class VolleyNetworkManager {
     {
         //update prefixURL
 
-        StringRequest request = new StringRequest(Request.Method.POST, prefixURL + url,new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d(TAG + ": ", "somePostRequest Response : " );
-                        makeRequestResponse = response;
-                        callback.onSuccess(response);
+        StringRequest request = new StringRequest(Request.Method.POST, url,new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG + ": ", "somePostRequest Response : " + response);
+                makeRequestResponse = response;
+                callback.onSuccess(response);
                         /*
                         if(null != response.toString())
                             listener.getResult(response.toString());
                             */
-                    }
-                },
+            }
+        },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {

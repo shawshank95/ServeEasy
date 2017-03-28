@@ -116,12 +116,14 @@ public class NearbyServices extends Fragment implements ActivityCompat.OnRequest
 
     ///volley
     void getServices() {
-        requestQueue = Volley.newRequestQueue(getActivity());
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("consumer_locx", latitude + "");
+        params.put("consumer_locy", longitude + "");
         String url = UserDetails.getInstance().url + "fetch_services.php";
-        StringRequest request = new StringRequest( Request.Method.POST, url,
-                new Response.Listener<String>() {
+        VolleyNetworkManager.getInstance(getContext()).makeRequest(params,
+                url, new VolleyNetworkManager.Callback() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onSuccess(String response) {
                         try{
                             Log.d("services",response);
                             JSONArray jsonArray = new JSONArray(response);
@@ -133,30 +135,10 @@ public class NearbyServices extends Fragment implements ActivityCompat.OnRequest
                         catch (Exception e){
                             e.printStackTrace();
                         }
-
                         NearbyServicesAdapter adapter = new NearbyServicesAdapter(getActivity(), 0, arrayOfItems);
                         requestsList.setAdapter(adapter);
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
-                        Log.d("fetch_services error",error.toString());
-                    }
-                }
-        )
-        {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("consumer_locx", latitude + "");
-                params.put("consumer_locy", longitude + "");
-                return params;
-            }
-        };
-        request.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        requestQueue.add(request);
+                });
     }
 
     @Override
@@ -182,15 +164,12 @@ public class NearbyServices extends Fragment implements ActivityCompat.OnRequest
         latitude = location.getLatitude();
         Log.d("Latitude", latitude + " ");
     }
-
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
     }
-
     @Override
     public void onProviderEnabled(String s) {
     }
-
     @Override
     public void onProviderDisabled(String s) {
     }

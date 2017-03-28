@@ -42,13 +42,13 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
     ListView requestsList;
     ArrayList<ListData> arrayOfItems;
     RequestsAdapter adapter;
-    String request_id = "";
+    String request_id = "",consumerAddress;
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_pending_requests, container, false);
+        final View v = inflater.inflate(R.layout.fragment_pending_requests, container, false);
         requestsList = (ListView) v.findViewById(R.id.list);
         arrayOfItems = new ArrayList<>();
         //getRequests();
@@ -72,12 +72,14 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
 
                 TextView quantityView = (TextView)view.findViewById(R.id.quantity);
                 String quantity = quantityView.getText().toString();
+
                 try {
                     request_id = arrayOfItems.get(i).jOb.getString("request_id");
+                    consumerAddress = arrayOfItems.get(i).jOb.getString("address");
                 }
                 catch (Exception e){
                 }
-                showDetails(i,consumerName,categoryName,distance,quantity,request_id);
+                showDetails(i,consumerName,categoryName,distance,quantity,request_id,consumerAddress);
             }
         });
         swipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swipe_refresh_layout);
@@ -94,7 +96,7 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
     }
 
 
-    private void showDetails(int position,String consumerName,String categoryName,String distance, String quantity,String request_id) {
+    private void showDetails(int position,String consumerName,String categoryName,String distance, String quantity,String request_id,String address) {
         FragmentManager fm = getFragmentManager();
 
         Bundle args = new Bundle();
@@ -103,6 +105,7 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
         args.putString("quantity",quantity);
         args.putString("distance",distance);
         args.putString("request_id",request_id);
+        args.putString("address",address);
         args.putInt("listItemPosition", position);
 
         RequestDetails details = RequestDetails.newInstance();
@@ -123,22 +126,24 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
         }
         else if (response.equals("decline")){ // Here,decline == cancel
             //adapter.remove(adapter.getItem(position));
-            Log.d("listSize", arrayOfItems.size()+"");
+           // Log.d("listSize", arrayOfItems.size()+"");
             makeRequestStatusCancelled();
             //todo:now check if this moved to transactions
             arrayOfItems.remove(position);
             requestsList.invalidateViews();
-            Log.d("newListSize", arrayOfItems.size()+"");
+            //Log.d("newListSize", arrayOfItems.size()+"");
             //Toast.makeText(getActivity(), "serverUpdate "+position+arrayOfItems.size(), Toast.LENGTH_SHORT).show();
         }
     }
 
 
     void makeRequestStatusDelivered(){
+        Toast.makeText(getActivity(),"Done clicked",Toast.LENGTH_LONG).show();
         Map<String, String> params = new HashMap<>();
         params.put("status","3");// move to transactions
         params.put("request_id",request_id);
-        VolleyNetworkManager.getInstance(getContext()).makeRequest(params, "update_request_status.php",
+        String url = UserDetails.getInstance().url + "update_request_status.php";
+        VolleyNetworkManager.getInstance(getContext()).makeRequest(params, url,
                 new VolleyNetworkManager.Callback() {
                     @Override
                     public void onSuccess(String response) {
@@ -152,7 +157,8 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
         Map<String, String> params = new HashMap<>();
         params.put("status","4"); // move to transactions
         params.put("request_id",request_id);
-        VolleyNetworkManager.getInstance(getContext()).makeRequest(params, "update_request_status.php",
+        String url = UserDetails.getInstance().url + "update_request_status.php";
+        VolleyNetworkManager.getInstance(getContext()).makeRequest(params, url,
                 new VolleyNetworkManager.Callback() {
                     @Override
                     public void onSuccess(String response) {
@@ -161,14 +167,15 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
                 });
     }
 
-
     void getRequests() {
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        Map<String, String> params = new HashMap<>();
+        params.put("provider_id", UserDetails.getInstance().providerId);
+        params.put("type","pending");
         String url = UserDetails.getInstance().url + "fetch_requests.php";
-        StringRequest request = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
+        VolleyNetworkManager.getInstance(getContext()).makeRequest(params, url,
+                new VolleyNetworkManager.Callback() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onSuccess(String response) {
                         Log.d("PendingRequest response", response);
                         try {
                             if(arrayOfItems!=null)
@@ -184,26 +191,7 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
                         adapter.notifyDataSetChanged();
                         swipeRefreshLayout.setRefreshing(false);
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
-                        Log.d("fetch_services error", error.toString());
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }
-        )
-        {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("provider_id", UserDetails.getInstance().providerId);
-                params.put("type","pending");
-                return params;
-            }
-        };
-        requestQueue.add(request);
+                });
     }
 
     @Override

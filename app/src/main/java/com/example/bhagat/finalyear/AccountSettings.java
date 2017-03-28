@@ -20,10 +20,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-/**
+/**]
  * Created by Shashank on 09-10-2016.
  * Improved by bhagat on 10/28/16.
  */
@@ -46,7 +51,7 @@ public class AccountSettings extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        categoryName = new ArrayList<String>();
+        categoryName = new ArrayList<>();
         service_name = (EditText) getActivity().findViewById(R.id.etservice_name);
         tvcategoryName = (TextView) getActivity().findViewById(R.id.tvcat_name);
         buttonSave = (Button) getActivity().findViewById(R.id.buttonSave);
@@ -85,48 +90,21 @@ public class AccountSettings extends Fragment {
         });
     }
     public void postRequest() {
-        String url = "http://192.168.109.41/se_addService.php";
-        final com.android.volley.RequestQueue queue = Volley.newRequestQueue(getActivity());
-        //-> POST REQUEST USING VOLLEY
-        pDialog = new ProgressDialog(getActivity());
-        pDialog.setMessage("Updating...");
-        pDialog.show();
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
+        Map<String, String> params = new HashMap<>();
+        params.put("providerID", PROVIDER_ID + "");
+        params.put("serviceName", SERVICE_NAME);
+        params.put("noOfCategories", categoryName.size() + "");
+        for (int i = 0; i < categoryName.size(); i++) {
+            params.put("category" + i, categoryName.get(i));
+            Log.d("category", categoryName.get(i));
+        }
+        categoryName.clear();
+        VolleyNetworkManager.getInstance(getContext()).makeRequest(params,
+                "http://192.168.109.41/se_addService.php", new VolleyNetworkManager.Callback() {
                     @Override
-                    public void onResponse(String response) {
-                        // response
+                    public void onSuccess(String response) {
                         Log.d("RESPONSE", response);
-                        pDialog.hide();
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        Log.d("ERROR", error.getMessage() + " ");
-                        pDialog.hide();
-                    }
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("providerID", PROVIDER_ID + "");
-                params.put("serviceName", SERVICE_NAME);
-                params.put("noOfCategories", categoryName.size() + "");
-                for (int i = 0; i < categoryName.size(); i++) {
-                    params.put("category" + i, categoryName.get(i));
-                    Log.d("category", categoryName.get(i));
-                }
-                categoryName.clear();
-                return params;
-            }
-        };
-        postRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        queue.cancelAll(TAG);
-        postRequest.setTag(TAG);
-        queue.add(postRequest);
-        postRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                });
     }
 }

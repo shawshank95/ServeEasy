@@ -26,13 +26,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConsumerBackgroundService extends Service {
-    public ConsumerBackgroundService() {
-    }
+
     RequestQueue requestQueue;
     NotificationCompat.Builder notification;
     private static int notificationID;
     BackgroundService backgroundService;
-
+    boolean isRunning = false;
     @Override
     public void onCreate() {
         //what's the use of calling super?
@@ -94,7 +93,7 @@ public class ConsumerBackgroundService extends Service {
         Log.d("ConsumerService", "started");
         if (!backgroundService.isRunning()) {
             backgroundService.start();
-            backgroundService.isRunning = true;
+            isRunning = true;
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -104,18 +103,18 @@ public class ConsumerBackgroundService extends Service {
 
 
     class BackgroundService extends Thread {
-        public boolean isRunning = false;
-        public long TIME_GAP = 6000;
+
+        public long TIME_GAP = 3000;
         //        Handler networkRequest= new Handler();
         Runnable runTask = new Runnable() {
             int count = 0;
             @Override
             public void run() {
                 isRunning = true;
-                while (count<1000) {
+                while (isRunning) {
                     count++;
                     try {
-                        Log.d("BackgroundServiceCount", count+"");
+                        Log.d("CBackgroundServiceCount", count+"");
                         fetchNotifications();
                         Thread.sleep(TIME_GAP);
                     } catch (InterruptedException e) {
@@ -202,9 +201,9 @@ public class ConsumerBackgroundService extends Service {
                         Log.d("markRequestSeenResponse", response);
                         try{
                             if(seenVal.equals("2"))
-                            generateAcceptedNotifications(jOb.getString("category_name"),
-                                    jOb.getString("consumer_name"),
-                                    jOb.getString("quantity"));
+                                generateAcceptedNotifications(jOb.getString("category_name"),
+                                        jOb.getString("consumer_name"),
+                                        jOb.getString("quantity"));
                             else
                                 generateCancelledNotifications(jOb.getString("category_name"),
                                         jOb.getString("consumer_name"),
@@ -241,17 +240,17 @@ public class ConsumerBackgroundService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+
         /*
         The system invokes this method when the service is no longer used and is being destroyed.
         Your service should implement this to clean up any resources such as threads, registered listeners,
         or receivers. This is the last call that the service receives.
          */
-        if (backgroundService.isRunning) {
+            Log.d("destroy_cservice","Consumer Service Destroyed");
             backgroundService.interrupt();
-            backgroundService.isRunning = false;
+            isRunning = false;
             backgroundService = null;
-        }
+        super.onDestroy();
     }
     @Nullable
     @Override
@@ -259,7 +258,13 @@ public class ConsumerBackgroundService extends Service {
         return null;
     }
 
-/*  @Override
+    @Override
+    public boolean stopService(Intent name) {
+        isRunning = false;
+        return super.stopService(name);
+    }
+
+    /*  @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
