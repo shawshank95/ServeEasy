@@ -149,6 +149,10 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
                     public void onSuccess(String response) {
                         Log.d("makeStatusDelivered",response);
                     }
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
+                    }
                 });
         //here, no notification will be sent, only transactions will move to transactions page for provider
     }
@@ -163,6 +167,10 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
                     @Override
                     public void onSuccess(String response) {
                         Log.d("makeStatusCancelled",response);
+                    }
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -190,6 +198,10 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
                         }
                         adapter.notifyDataSetChanged();
                         swipeRefreshLayout.setRefreshing(false);
+                    }
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
                     }
                 });
     }

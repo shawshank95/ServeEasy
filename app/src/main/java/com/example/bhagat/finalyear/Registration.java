@@ -3,6 +3,7 @@ package com.example.bhagat.finalyear;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +30,7 @@ import java.util.Map;
 
 public class Registration extends AppCompatActivity {
 
+    static String TAG = "Registration";
     EditText name, mobileNo, address, password, confirmPassword, pinNo;
     RadioButton radioConsumer, radioProvider;
     RadioGroup radioGroup;
@@ -78,13 +80,7 @@ public class Registration extends AppCompatActivity {
         if (checkValidity()) {
             //check mobile no availibility -- backend
             checkMobileNoAvailibility();
-            if (isMobileNoAvaialble) {
-                Log.d("findPlaceCoordinaes","calling");
-                if (findPlaceCoordinates()) {
-                    Log.d("register","calling");
-                    register();
-                }
-            }
+            //continued in checkMobileNoAvailability()
         }
     }
 
@@ -147,14 +143,20 @@ public class Registration extends AppCompatActivity {
                                 Toast.makeText(Registration.this, "Sorry, this mobile no is already registered.                                                                 Try again.", Toast.LENGTH_LONG).show();
                             } else {
                                 isMobileNoAvaialble = true;
+                                findPlaceCoordinates();
+
                             }
                         } catch (Exception e) {
                             //isMobileNoAvaialble = false;
                         }
 
                     }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(Registration.this,error,Toast.LENGTH_LONG).show();
+                    }
                 });
-        Log.d("checkNumberAvailability","called");
         //return isMobileNoAvaialble;
     }
 
@@ -165,6 +167,7 @@ public class Registration extends AppCompatActivity {
         Map<String, String> params = new HashMap<>();
         VolleyNetworkManager.getInstance(getApplicationContext()).makeRequest(params, locationUrl,
                 new VolleyNetworkManager.Callback() {
+
                     @Override
                     public void onSuccess(String response) {
                         try {
@@ -180,10 +183,20 @@ public class Registration extends AppCompatActivity {
                             Log.d("coordinates", loc_x + " " + loc_y);
                             //Toast.makeText(Registration.this,"here" + loc_x + " " + loc_y,Toast.LENGTH_LONG).show();
                             placeCoordinates = true;
+
+                            Log.d("register","calling");
+                            register();
+
                         } catch (Exception e) {
                             //placeCoordinates = false;
                             e.printStackTrace();
                         }
+
+
+                    }
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(Registration.this,error,Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -212,6 +225,11 @@ public class Registration extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
                         startActivity(new Intent(Registration.this, Login.class));
                         finish();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(Registration.this,error,Toast.LENGTH_LONG).show();
                     }
                 });
 

@@ -34,7 +34,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="shashank"
-            android:textSize="17dp"
+            android:textSize="17sp"
+            android:ellipsize="none"
+            android:singleLine="false"
             android:layout_marginTop="10dp"/>
         <!--android:layout_gravity="center_horizontal"-->
 

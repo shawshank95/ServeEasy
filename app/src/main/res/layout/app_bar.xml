@@ -4,7 +4,7 @@
 
     android:layout_height="56dp"
     android:layout_width="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/primary"
     >
     <!--app:popupTheme="@style/ThemeOvelay.AppCompat.Dark" -->
 

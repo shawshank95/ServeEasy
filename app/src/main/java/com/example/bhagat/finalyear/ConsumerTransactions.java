@@ -117,8 +117,11 @@ public class ConsumerTransactions extends Fragment {
                             e.printStackTrace();
                         }
                     }
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
+                    }
                 });
-
     }
 
 

@@ -154,6 +154,11 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
                     public void onSuccess(String response) {
                         Log.d("makeStatusCancelled",response);
                     }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
+                    }
                 });
     }
 
@@ -168,6 +173,10 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
                     @Override
                     public void onSuccess(String response) {
                         Log.d("makeStatusCancelled",response);
+                    }
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -202,6 +211,10 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
                     }
                 });
     }

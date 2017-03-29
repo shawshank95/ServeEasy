@@ -54,7 +54,7 @@ public class Login extends AppCompatActivity {
         login = (Button) findViewById(R.id.login);
         provider = (RadioButton) findViewById(R.id.login_provider);
 
-        signup.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+        //signup.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
         arrayOfItems = new ArrayList<>();
         signup.setOnClickListener(new View.OnClickListener() {
             @Override

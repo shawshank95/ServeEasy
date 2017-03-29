@@ -41,7 +41,7 @@ import java.util.Map;
 
 public class NearbyServices extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback,LocationListener {
 
-    RequestQueue requestQueue;
+
     ListView requestsList;
     ArrayList<ListData> arrayOfItems;
     private LocationManager locationManager;
@@ -116,7 +116,7 @@ public class NearbyServices extends Fragment implements ActivityCompat.OnRequest
 
     ///volley
     void getServices() {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("consumer_locx", latitude + "");
         params.put("consumer_locy", longitude + "");
         String url = UserDetails.getInstance().url + "fetch_services.php";
@@ -137,6 +137,10 @@ public class NearbyServices extends Fragment implements ActivityCompat.OnRequest
                         }
                         NearbyServicesAdapter adapter = new NearbyServicesAdapter(getActivity(), 0, arrayOfItems);
                         requestsList.setAdapter(adapter);
+                    }
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -161,7 +165,8 @@ public class NearbyServices extends Fragment implements ActivityCompat.OnRequest
         UserDetails.getInstance().latitude = latitude+"";
         UserDetails.getInstance().longitude = longitude+"";
         Log.d("Longitude", longitude + " ");
-        latitude = location.getLatitude();
+        Toast.makeText(getActivity(),latitude +" "+longitude,Toast.LENGTH_LONG).show();
+        //latitude = location.getLatitude();
         Log.d("Latitude", latitude + " ");
     }
     @Override

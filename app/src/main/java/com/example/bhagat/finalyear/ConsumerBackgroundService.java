@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
@@ -102,8 +104,8 @@ public class ConsumerBackgroundService extends Service {
 
 
 
-    class BackgroundService extends Thread {
-
+    class BackgroundService extends Thread  {
+        boolean hasInternet = false;
         public long TIME_GAP = 3000;
         //        Handler networkRequest= new Handler();
         Runnable runTask = new Runnable() {
@@ -112,6 +114,7 @@ public class ConsumerBackgroundService extends Service {
             public void run() {
                 isRunning = true;
                 while (isRunning) {
+
                     count++;
                     try {
                         Log.d("CBackgroundServiceCount", count+"");

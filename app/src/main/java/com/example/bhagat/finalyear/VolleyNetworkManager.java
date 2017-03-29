@@ -1,11 +1,20 @@
 package com.example.bhagat.finalyear;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -16,6 +25,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import static android.content.Context.CONNECTIVITY_SERVICE;
 
 /**
  * Created by bhagat on 2/5/17.
@@ -32,6 +43,7 @@ public class VolleyNetworkManager {
 
     public interface Callback{
         void onSuccess(String response);
+        void onError(String error);
     }
 
 
@@ -43,10 +55,10 @@ public class VolleyNetworkManager {
         //other stuff if you need
     }
     //todo : why synchronized is used?
-    public static  synchronized  VolleyNetworkManager getInstance(Context context)
-    {
+    public static  synchronized  VolleyNetworkManager getInstance(Context context) {
         if (null == instance)
             instance = new VolleyNetworkManager(context);
+
         return instance;
     }
     /*
@@ -61,6 +73,9 @@ public class VolleyNetworkManager {
             return instance;
         }
     */
+
+
+
     public void makeRequest(final Map<String, String> params, String url, final Callback callback) //SomeCustomListener<String> listener) final Response.Listener<String> listener
     {
         //update prefixURL
@@ -68,24 +83,36 @@ public class VolleyNetworkManager {
         StringRequest request = new StringRequest(Request.Method.POST, url,new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(TAG + ": ", "somePostRequest Response : " + response);
-                makeRequestResponse = response;
-                callback.onSuccess(response);
+                if (response != null) {
+                    Log.d(TAG + ": ", "somePostRequest Response : " + response);
+                    makeRequestResponse = response;
+                    callback.onSuccess(response);
                         /*
                         if(null != response.toString())
                             listener.getResult(response.toString());
                             */
+                }
             }
         },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e(TAG , "Error Response code: " + error.toString());//error.networkResponse.statusCode);
-                        /*
-                        if (null != error.networkResponse){
-                            listener.getResult(false);
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Log.e(TAG , "Error Response code: " + volleyError.toString());//error.networkResponse.statusCode);
+                        String message = null;
+                        if (volleyError instanceof NetworkError) {
+                            message = "Cannot connect to Internet...Please check your connection!";
+                        } else if (volleyError instanceof ServerError) {
+                            message = "The server could not be found. Please try again after some time!!";
+                        } else if (volleyError instanceof AuthFailureError) {
+                            message = "Cannot connect to Internet...Please check your connection!";
+                        } else if (volleyError instanceof ParseError) {
+                            message = "Parsing error! Please try again after some time!!";
+                        } else if (volleyError instanceof NoConnectionError) {
+                            message = "Cannot connect to Internet...Please check your connection!";
+                        } else if (volleyError instanceof TimeoutError) {
+                            message = "Connection TimeOut! Please check your internet connection.";
                         }
-                        */
+                        callback.onError(message);
                     }
                 })
         {

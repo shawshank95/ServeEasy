@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,10 +32,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import static com.example.bhagat.finalyear.Login.context;
 
 
 public class MakeRequest extends AppCompatActivity {
@@ -94,9 +98,11 @@ public class MakeRequest extends AppCompatActivity {
         month = calendar.get(java.util.Calendar.MONTH);
         day = calendar.get(java.util.Calendar.DAY_OF_MONTH);
 
+
         dueDay = day;
         dueMonth = month;
         dueYear = year;
+
 
         //call
         callButton.setOnClickListener(new View.OnClickListener() {
@@ -104,24 +110,20 @@ public class MakeRequest extends AppCompatActivity {
             public void onClick(View view) {
                 String phoneNumber = "tel:"+providerPhnoVal;
                 Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse(phoneNumber));
-
                 if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     Log.d("Call permission", "denied");
                     return;
                 }
-
                 Log.d("Call", "success");
                 startActivity(callIntent);
             }
         });
-
         //set date
         dueDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //showDialogOnClick();
                 showDialog(DIALOG_ID);
-
             }
         });
 
@@ -132,7 +134,6 @@ public class MakeRequest extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 submitRequst();
-
             }
         });
     }
@@ -146,6 +147,8 @@ public class MakeRequest extends AppCompatActivity {
     }
 
 
+
+
     DatePickerDialog.OnDateSetListener dplistener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
@@ -156,6 +159,12 @@ public class MakeRequest extends AppCompatActivity {
             Log.d("Date ",""+dueDay+"/"+ dueMonth +"/"+dueYear);
         }
     };
+
+    /*DatePickerDialog datePickerDialog = new DatePickerDialog(context, DatePickerListener, year, month, day);
+    datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+    datePickerDialog.show();*/
+
+
 
     ///volley
     public void inflateCategorySpinner(){
@@ -199,6 +208,11 @@ public class MakeRequest extends AppCompatActivity {
                         });
 
                     }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(getApplicationContext(),error,Toast.LENGTH_LONG).show();
+                    }
                 });
     }
 
@@ -229,6 +243,11 @@ public class MakeRequest extends AppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(),ConsumerHome.class);
                         startActivity(intent);
                         /// /new Intent(getApplicationContext(),NearbyServices.class));
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(getApplicationContext(),error,Toast.LENGTH_LONG).show();
                     }
                 });
     }
