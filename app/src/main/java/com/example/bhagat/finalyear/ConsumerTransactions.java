@@ -112,7 +112,7 @@ public class ConsumerTransactions extends Fragment {
                                 JSONObject jOb = jsonArray.getJSONObject(i);
                                 arrayOfItems.add(new ListData(jOb));
                             }
-                            Collections.reverse(arrayOfItems);
+                            //Collections.reverse(arrayOfItems);
                             myAdapter = new ConsumerTransactionsAdapter(arrayOfItems);
                             myRecyclerView.setAdapter(myAdapter);
                         } catch (JSONException e) {

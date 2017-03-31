@@ -52,8 +52,7 @@ public class NearbyServicesAdapter extends ArrayAdapter<ListData>{
             String firstLetter = objects.get(position).jOb.getString("service_name").charAt(0)+"";
             int color = generator.getRandomColor();
             //int color = generator.getColor(firstLetter);
-
-            TextDrawable drawable = TextDrawable.builder().buildRound(firstLetter.toUpperCase(),color);
+            TextDrawable drawable = TextDrawable.builder().beginConfig().width(40).height(40).endConfig().buildRoundRect(firstLetter.toUpperCase(),color,4);
             letterImage.setImageDrawable(drawable);
             serviceName.setText(objects.get(position).jOb.getString("service_name"));
             providerName.setText(objects.get(position).jOb.getString("provider_name"));

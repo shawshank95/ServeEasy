@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -49,7 +51,9 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 public class AccountSettings extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback,LocationListener {
     ArrayList<String> categoryName;
     EditText textIn;
-    Button buttonAdd, buttonSave,updateLocation;
+    Button buttonSave;
+    FloatingActionButton buttonAdd;
+    ImageView updateLocation;
     LinearLayout container;
     EditText service_name;
     TextView tvcategoryName;
@@ -73,12 +77,12 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
         arrayOfItems = new ArrayList<>();
         categoryName = new ArrayList<>();
 
-        updateLocation = (Button) getActivity().findViewById(R.id.update_location);
+        updateLocation = (ImageView) getActivity().findViewById(R.id.update_location);
         service_name = (EditText) getActivity().findViewById(R.id.etservice_name);
         tvcategoryName = (TextView) getActivity().findViewById(R.id.tvcat_name);
         buttonSave = (Button) getActivity().findViewById(R.id.buttonSave);
         textIn = (EditText) getActivity().findViewById(R.id.textin);
-        buttonAdd = (Button) getActivity().findViewById(R.id.add);
+        buttonAdd = (FloatingActionButton) getActivity().findViewById(R.id.add);
         container = (LinearLayout) getActivity().findViewById(R.id.container);
 
         getLocation();

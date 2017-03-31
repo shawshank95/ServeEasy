@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -47,11 +49,12 @@ public class MakeRequest extends AppCompatActivity {
     com.android.volley.RequestQueue requestQueue;
     JSONArray jArr;
     String selectedCategoryId = "", serviceIdVal= "",providerNameVal="",serviceNameVal="",providerPhnoVal="";
-    ImageButton dueDate, callButton;
+    ImageView dueDate;
+    FloatingActionButton callButton;
     TextView selectDate,serviceName,providerName,providerPhno;
     EditText quantity,address;
     Spinner selectCategory;
-    Button submit;
+    CardView submit;
     int year, month, day, dueDay,dueMonth, dueYear;
     static final int DIALOG_ID = 0;
 
@@ -59,11 +62,8 @@ public class MakeRequest extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_request);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+
+
         requestQueue = Volley.newRequestQueue(this);
 
         serviceIdVal = getIntent().getStringExtra("serviceId");
@@ -84,9 +84,9 @@ public class MakeRequest extends AppCompatActivity {
 
         Toast.makeText(this,serviceIdVal +"",Toast.LENGTH_LONG).show();
 
-        submit  = (Button) findViewById(R.id.submit);
-        callButton = (ImageButton) findViewById(R.id.call_button);
-        dueDate = (ImageButton) findViewById(R.id.pick_date_button);
+        submit  = (CardView) findViewById(R.id.submit_button);
+        callButton = (FloatingActionButton) findViewById(R.id.call_button);
+        dueDate = (ImageView) findViewById(R.id.pick_date_button);
         selectCategory = (Spinner) findViewById(R.id.select_category);
 
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());

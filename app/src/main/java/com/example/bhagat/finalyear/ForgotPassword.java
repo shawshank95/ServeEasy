@@ -86,7 +86,7 @@ public class ForgotPassword extends AppCompatActivity {
 
                 String number = mobileNo.getText().toString();
                 if (number.trim().length() == 0) {
-                    Toast.makeText(ForgotPassword.this, "Please enter a mobile no", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ForgotPassword.this, "Please anim_slide_in_right a mobile no", Toast.LENGTH_LONG).show();
                 } else {
 
 

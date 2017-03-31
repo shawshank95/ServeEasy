@@ -3,7 +3,6 @@ package com.example.bhagat.finalyear;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,11 +13,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.HashMap;
@@ -224,6 +219,7 @@ public class Registration extends AppCompatActivity {
                         Log.d("registration response", response);
                         Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
                         startActivity(new Intent(Registration.this, Login.class));
+                        overridePendingTransition(R.anim.enter, R.anim.exit);
                         finish();
                     }
 
@@ -234,5 +230,13 @@ public class Registration extends AppCompatActivity {
                 });
 
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.enter, R.anim.exit);
+        //overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
+        //overridePendingTransition(R.anim.enter,R.anim.anim_slide_in_right);
     }
 }
