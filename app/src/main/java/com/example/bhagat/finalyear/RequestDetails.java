@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 public class RequestDetails extends DialogFragment implements View.OnClickListener{
 
-    String consumerName, categoryName, distance, quantity, request_id,address;
+    String consumerName, categoryName, distance, quantity, request_id,address,phno;
     int listItemPosition;
     Button accept, decline;
     public RequestDetails(){
@@ -93,12 +93,14 @@ public class RequestDetails extends DialogFragment implements View.OnClickListen
         quantity = args.getString("quantity");
         request_id = args.getString("request_id");
         listItemPosition = args.getInt("listItemPosition");
+        phno = args.getString("consumerPhno");
         address = args.getString("address");
         ((TextView) view.findViewById(R.id.customerName) ).setText(consumerName);
         //todo: Make a request to server for fetching complete address of consumer from REQUEST table
         ((TextView) view.findViewById(R.id.customerAddress) ).setText(address);
         ((TextView) view.findViewById(R.id.category) ).setText(categoryName);
         ((TextView) view.findViewById(R.id.quantity) ).setText(quantity);
+        ((TextView) view.findViewById(R.id.consumer_phno)).setText(phno);
         //to remove dialog when click outside of it
             //setCancelable(true);
         return view;

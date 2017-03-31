@@ -42,7 +42,7 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
     ListView requestsList;
     ArrayList<ListData> arrayOfItems;
     RequestsAdapter adapter;
-    String request_id = "",consumerAddress;
+    String request_id = "",consumerAddress,consumerPhno;
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -76,10 +76,11 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
                 try {
                     request_id = arrayOfItems.get(i).jOb.getString("request_id");
                     consumerAddress = arrayOfItems.get(i).jOb.getString("address");
+                    consumerPhno = arrayOfItems.get(i).jOb.getString("consumer_phno");
                 }
                 catch (Exception e){
                 }
-                showDetails(i,consumerName,categoryName,distance,quantity,request_id,consumerAddress);
+                showDetails(i,consumerName,categoryName,distance,quantity,request_id,consumerAddress,consumerPhno);
             }
         });
         swipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swipe_refresh_layout);
@@ -96,7 +97,7 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
     }
 
 
-    private void showDetails(int position,String consumerName,String categoryName,String distance, String quantity,String request_id,String address) {
+    private void showDetails(int position,String consumerName,String categoryName,String distance, String quantity,String request_id,String address,String consumerPhno) {
         FragmentManager fm = getFragmentManager();
 
         Bundle args = new Bundle();
@@ -106,6 +107,7 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
         args.putString("distance",distance);
         args.putString("request_id",request_id);
         args.putString("address",address);
+        args.putString("consumerPhno",consumerPhno);
         args.putInt("listItemPosition", position);
 
         RequestDetails details = RequestDetails.newInstance();
@@ -132,7 +134,6 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
             arrayOfItems.remove(position);
             requestsList.invalidateViews();
             //Log.d("newListSize", arrayOfItems.size()+"");
-
         }
     }
 
@@ -174,6 +175,7 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
                     }
                 });
     }
+
 
     void getRequests() {
         Map<String, String> params = new HashMap<>();

@@ -16,4 +16,5 @@
     <string name="registration_address">Address</string>
     <string name="registration_submit_button">Submit</string>
     <string name="call_button">this is contact contentDescription</string>
+    <string name="title_activity_consumer_account_settings">ConsumerAccountSettings</string>
 </resources>

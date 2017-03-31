@@ -10,7 +10,11 @@
     <!--android:weightSum="3"-->
 
 
-
+    <ImageView
+        android:layout_margin="10dp"
+        android:id="@+id/letter_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -18,6 +22,7 @@
         android:orientation="vertical"
         android:layout_margin="10dp"
         android:layout_weight="1">
+
         <!--android:layout_weight="2"   android:layout_width="0dp"-->
         <TextView
             android:id="@+id/service_name"
@@ -25,8 +30,9 @@
             android:layout_height="wrap_content"
             android:text="ganjha"
             android:textSize="20dp"
+            android:textColor="@android:color/black"
             android:textStyle="bold"
-            android:layout_marginTop="10dp"/>
+            />
         <!--android:layout_gravity="center_horizontal"-->
 
         <TextView

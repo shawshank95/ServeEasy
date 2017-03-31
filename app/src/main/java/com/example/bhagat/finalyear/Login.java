@@ -69,9 +69,10 @@ public class Login extends AppCompatActivity {
 
         /*This is used to keep the user logged in when the next time the user opens the app*/
         if (loggdedIn) {
+            editor.putString("username",UserDetails.getInstance().userName);
+            UserDetails.getInstance().userId = sp.getString("userId","0");
             String userType = sp.getString("userType","guest");
             if (userType.equals("provider")) {
-                editor.putString("username",UserDetails.getInstance().userName);
                 startActivity(new Intent(this, ProviderHome.class));
             } else {
                 startActivity(new Intent(this, ConsumerHome.class));
@@ -134,7 +135,11 @@ public class Login extends AppCompatActivity {
                                     editor.putBoolean("available",available);
                                     editor.commit();
                                 }
-
+                                else{
+                                    String radial_distance = arrayOfItems.get(i).jOb.getString("radial_distance");
+                                    editor.putString("radial_distance",radial_distance);
+                                    editor.commit();
+                                }
                                 int row_count = arrayOfItems.get(i).jOb.getInt("row_count");
                                 if (row_count != 1) {
                                     logInSuccessful = false;
@@ -144,6 +149,8 @@ public class Login extends AppCompatActivity {
                                     editor.commit();
                                     UserDetails.getInstance().userName = user_name;
                                     UserDetails.getInstance().userId = user_id;
+                                    editor.putString("userId",user_id);
+                                    editor.commit();
                                     UserDetails.getInstance().consumerId = user_id;
                                     UserDetails.getInstance().providerId = user_id;
                                     UserDetails.getInstance().isProvider = true;

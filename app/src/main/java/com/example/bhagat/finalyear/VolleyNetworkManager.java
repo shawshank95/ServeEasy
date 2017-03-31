@@ -31,6 +31,7 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 /**
  * Created by bhagat on 2/5/17.
  */
+
 public class VolleyNetworkManager {
 
     //makeRequestString is not a local variable but an instance so inner class can reference it from container object.

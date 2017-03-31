@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -90,12 +91,12 @@ public class MakeRequest extends AppCompatActivity {
 
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
-        Toast.makeText(this,date,Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"date" + date,Toast.LENGTH_LONG).show();
 
         //set current date
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         year = calendar.get(java.util.Calendar.YEAR);
-        month = calendar.get(java.util.Calendar.MONTH);
+        month = calendar.get(java.util.Calendar.MONTH) + 1;
         day = calendar.get(java.util.Calendar.DAY_OF_MONTH);
 
 
@@ -196,7 +197,7 @@ public class MakeRequest extends AppCompatActivity {
                             @Override
                             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                                 try {
-                                    selectedCategoryId = (String) jArr.getJSONObject(position).getString("category_id");
+                                    selectedCategoryId = jArr.getJSONObject(position).getString("category_id");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -221,6 +222,12 @@ public class MakeRequest extends AppCompatActivity {
         String url = UserDetails.getInstance().url+"make_request.php";
 
         Map<String, String> params = new HashMap<>();
+        params.put("day", String.valueOf(day));
+        params.put("month", String.valueOf(month));
+        params.put("year", String.valueOf(year));
+
+        //Log.d("day",String.valueOf(day));
+
         params.put("service_id", serviceIdVal);
         params.put("consumer_id", UserDetails.getInstance().consumerId);
         params.put("category_id", selectedCategoryId);
@@ -231,20 +238,23 @@ public class MakeRequest extends AppCompatActivity {
         params.put("due_day", String.valueOf(dueDay));
         params.put("due_month", String.valueOf(dueMonth));
         params.put("due_year", String.valueOf(dueYear));
-        params.put("day", String.valueOf(day));
-        params.put("month", String.valueOf(month));
-        params.put("year", String.valueOf(year));
+
+
+
+
+
+
         VolleyNetworkManager.getInstance(getApplicationContext()).makeRequest(params,
                 url, new VolleyNetworkManager.Callback() {
                     @Override
                     public void onSuccess(String response) {
                         Log.d("Response123", response);
-                        Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getApplicationContext(),ConsumerHome.class);
                         startActivity(intent);
+                        finish();
                         /// /new Intent(getApplicationContext(),NearbyServices.class));
                     }
-
                     @Override
                     public void onError(String error) {
                         Toast.makeText(getApplicationContext(),error,Toast.LENGTH_LONG).show();

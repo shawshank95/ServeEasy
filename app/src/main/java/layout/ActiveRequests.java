@@ -51,7 +51,7 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
     ListView requestsList;
     ArrayList<ListData> arrayOfItems;
     RequestsAdapter adapter;
-    String request_id = "",consumerAddress;
+    String request_id = "",consumerAddress,consumerPhno;
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
@@ -85,10 +85,11 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
                 try {
                     request_id = arrayOfItems.get(i).jOb.getString("request_id");
                     consumerAddress = arrayOfItems.get(i).jOb.getString("address");
+                    consumerPhno = arrayOfItems.get(i).jOb.getString("consumer_phno");
                 }
                 catch (Exception e){
                 }
-                showDetails(i,consumerName,categoryName,distance,quantity,request_id,consumerAddress);
+                showDetails(i,consumerName,categoryName,distance,quantity,request_id,consumerAddress,consumerPhno);
             }
         });
 
@@ -112,7 +113,7 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
         RequestDetails dialog = new RequestDetails();
         dialog.show(getFragmentManager(), "dialogTag");
     }*/
-    private void showDetails(int position,String consumerName,String categoryName,String distance, String quantity,String request_id,String address) {
+    private void showDetails(int position,String consumerName,String categoryName,String distance, String quantity,String request_id,String address,String consumerPhno) {
         FragmentManager fm = getFragmentManager();
         Bundle args = new Bundle();
         args.putString("consumerName",consumerName);
@@ -122,6 +123,7 @@ public class ActiveRequests extends Fragment implements RequestDetails.RequestDi
         args.putString("request_id",request_id);
         args.putString("address",address);
         args.putInt("listItemPosition", position);
+        args.putString("consumerPhno",consumerPhno);
         RequestDetails details = RequestDetails.newInstance();
         details.setTargetFragment(this, 0);
         details.setArguments(args);

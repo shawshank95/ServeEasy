@@ -14,26 +14,40 @@
         android:textSize="@dimen/request_dialog_text_size"
         android:layout_centerHorizontal="true"
         />
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/consumer_phno"
+        android:textSize="@dimen/request_dialog_text_size"
+        android:layout_marginLeft="@dimen/request_dialog_margin"
+        android:layout_marginRight="@dimen/request_dialog_margin"
+        android:text="9199995326"
+        android:layout_below="@+id/customerName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp" />
     <TextView
         android:id="@+id/customerAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/customerName"
-        android:layout_margin="@dimen/request_dialog_margin"
         android:text="Customer Address"
         android:textSize="@dimen/request_dialog_text_size"
-        android:layout_centerHorizontal="true"
-        />
+        android:layout_marginLeft="@dimen/request_dialog_margin"
+        android:layout_marginRight="@dimen/request_dialog_margin"
+        android:layout_marginTop="75dp"
+        android:layout_below="@+id/customerName"
+        android:layout_centerHorizontal="true" />
 
     <LinearLayout
         android:id="@+id/categoryLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/request_dialog_margin"
+        android:layout_marginRight="@dimen/request_dialog_margin"
         android:layout_below="@+id/customerAddress"
-        android:layout_margin="@dimen/request_dialog_margin"
-        android:gravity="center_horizontal">
+        android:layout_alignEnd="@+id/linearLayout"
+        android:layout_marginTop="15dp">
 
         <TextView
             android:id="@+id/category"
@@ -61,9 +75,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/request_dialog_margin"
+        android:layout_marginRight="@dimen/request_dialog_margin"
+        android:id="@+id/linearLayout"
         android:layout_below="@+id/categoryLayout"
-        android:layout_margin="@dimen/request_dialog_margin"
-        android:gravity="center_horizontal">
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp">
 
         <Button
             android:id="@+id/accept"
