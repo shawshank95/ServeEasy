@@ -78,7 +78,7 @@ public class Login extends AppCompatActivity {
         });
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         editor  = sp.edit();
-        loggdedIn = sp.getBoolean("loggedin", false);
+        loggdedIn = sp.getBoolean("loggedin",  false);
 
         consumer.setOnClickListener(new View.OnClickListener() {
             @Override
