@@ -3,6 +3,7 @@ package com.example.bhagat.finalyear;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +14,11 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.HashMap;
@@ -138,7 +143,10 @@ public class Registration extends AppCompatActivity {
                                 Toast.makeText(Registration.this, "Sorry, this mobile no is already registered.                                                                 Try again.", Toast.LENGTH_LONG).show();
                             } else {
                                 isMobileNoAvaialble = true;
+
+                                //Log.d(TAG+"findPlaceCoordinates","calling");
                                 findPlaceCoordinates();
+
 
                             }
                         } catch (Exception e) {
@@ -149,9 +157,10 @@ public class Registration extends AppCompatActivity {
 
                     @Override
                     public void onError(String error) {
-                        Toast.makeText(Registration.this,error,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),error,Toast.LENGTH_LONG).show();
                     }
                 });
+        //Log.d(TAG+"checkNumberAvailability","called");
         //return isMobileNoAvaialble;
     }
 
@@ -162,7 +171,6 @@ public class Registration extends AppCompatActivity {
         Map<String, String> params = new HashMap<>();
         VolleyNetworkManager.getInstance(getApplicationContext()).makeRequest(params, locationUrl,
                 new VolleyNetworkManager.Callback() {
-
                     @Override
                     public void onSuccess(String response) {
                         try {
@@ -179,64 +187,39 @@ public class Registration extends AppCompatActivity {
                             //Toast.makeText(Registration.this,"here" + loc_x + " " + loc_y,Toast.LENGTH_LONG).show();
                             placeCoordinates = true;
 
-                            Log.d("register","calling");
-                            register();
+                            //Log.d(TAG+"callOTPVerification","calling");
+                            callOTPVerification();
+
 
                         } catch (Exception e) {
                             //placeCoordinates = false;
                             e.printStackTrace();
                         }
-
-
                     }
+
                     @Override
                     public void onError(String error) {
-                        Toast.makeText(Registration.this,error,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),error,Toast.LENGTH_LONG).show();
                     }
                 });
 
         return placeCoordinates;
     }
 
-    //// TODO: 2/13/17  redirect to login activity on success
-    public boolean register() {
-        //String url = "http://192.168.109.41/se_register.php";
-        Map<String, String> params = new HashMap<>();
-
-        params.put("user_type", user.userType);
-        params.put("name", user.name);
-        params.put("mobile_no", user.mobileNo);
-        params.put("password", user.password);
-        params.put("address", user.address);
-        params.put("loc_x", loc_x+"");
-        params.put("loc_y", loc_y+"");
-
-        String url = UserDetails.getInstance().url + "se_register.php";
-        VolleyNetworkManager.getInstance(getApplicationContext()).makeRequest(params, url,
-                new VolleyNetworkManager.Callback() {
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.d("registration response", response);
-                        Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(Registration.this, Login.class));
-                        overridePendingTransition(R.anim.enter, R.anim.exit);
-                        finish();
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                        Toast.makeText(Registration.this,error,Toast.LENGTH_LONG).show();
-                    }
-                });
-
-        return true;
+    void callOTPVerification(){
+        Bundle bundle = new Bundle();
+        bundle.putString("user_type", user.userType);
+        bundle.putString("name", user.name);
+        bundle.putString("mobile_no", user.mobileNo);
+        bundle.putString("password", user.password);
+        bundle.putString("address", user.address);
+        bundle.putString("loc_x", loc_x+"");
+        bundle.putString("loc_y", loc_y+"");
+        Log.d("CallOTPmobile",user.mobileNo+" "+bundle.getString("mobile_no"));
+        Intent i = new Intent(Registration.this,OTPVerification.class);
+        i.putExtra("registrationDetailsBundle",bundle);
+        startActivity(i);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.enter, R.anim.exit);
-        //overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
-        //overridePendingTransition(R.anim.enter,R.anim.anim_slide_in_right);
-    }
+
 }
