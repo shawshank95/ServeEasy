@@ -3,6 +3,7 @@ package com.example.bhagat.finalyear;
 import android.content.Context;
 import android.media.Image;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -20,11 +21,11 @@ import java.util.ArrayList;
 public class ConsumerTransactionsAdapter extends RecyclerView.Adapter<ConsumerTransactionsAdapter.DataObjectHolder> {
 
     public ArrayList<ListData> arrayOfItems;
+    Context context;
 
-    public static MyClickListener myClickListener;
 
-    public ConsumerTransactionsAdapter( ArrayList<ListData> listOfItems) { //ListData
-
+    public ConsumerTransactionsAdapter( ArrayList<ListData> listOfItems, Context context) { //ListData
+        this.context = context;
         this.arrayOfItems = listOfItems;
     }
 
@@ -43,8 +44,24 @@ public class ConsumerTransactionsAdapter extends RecyclerView.Adapter<ConsumerTr
             holder.providerName.setText(arrayOfItems.get(position).jOb.getString("provider_name"));
             holder.categoryName.setText(arrayOfItems.get(position).jOb.getString("category_name"));
             holder.quantity.setText("Quantity: "+ arrayOfItems.get(position).jOb.getString("quantity"));
-            //holder.status.setImageDrawable(arrayOfItems.get(position).jOb.getString("status"));
             holder.date.setText("Ordered: " + arrayOfItems.get(position).jOb.getString("date"));
+
+// pending accepted delivered cancelled
+            //setting status image
+            String requestStatus = arrayOfItems.get(position).jOb.getString("status");
+            if(requestStatus.equals("pending")){
+                holder.status.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.processing));
+            }
+            else if(requestStatus.equals("accepted")){
+                holder.status.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.checked));
+            }
+            else if(requestStatus.equals("delivered")){
+                holder.status.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.delivered));
+            }
+            else if(requestStatus.equals("cancelled")){
+                holder.status.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.cancel));
+            }
+
             Log.d("transactions_quant", arrayOfItems.get(position).jOb.getString("quantity"));
 
         }
@@ -53,13 +70,8 @@ public class ConsumerTransactionsAdapter extends RecyclerView.Adapter<ConsumerTr
         }
     }
 
-    public void setOnItemClickListener(MyClickListener myClickListener) {
-        this.myClickListener = myClickListener;
-    }
 
-    public interface MyClickListener {
-        public void onItemClick(int position, View v);
-    }
+
 
     @Override
     public int getItemCount() {
@@ -88,7 +100,7 @@ public class ConsumerTransactionsAdapter extends RecyclerView.Adapter<ConsumerTr
 
         @Override
         public void onClick(View v) {
-         //   myClickListener.onItemClick(getAdapterPosition(), v);
+            //   myClickListener.onItemClick(getAdapterPosition(), v);
         }
     }
 

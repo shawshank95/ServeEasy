@@ -113,7 +113,7 @@ public class ConsumerTransactions extends Fragment {
                                 arrayOfItems.add(new ListData(jOb));
                             }
                             //Collections.reverse(arrayOfItems);
-                            myAdapter = new ConsumerTransactionsAdapter(arrayOfItems);
+                            myAdapter = new ConsumerTransactionsAdapter(arrayOfItems,getActivity());
                             myRecyclerView.setAdapter(myAdapter);
                         } catch (JSONException e) {
                             e.printStackTrace();

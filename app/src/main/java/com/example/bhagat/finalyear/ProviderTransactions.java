@@ -72,7 +72,7 @@ public class ProviderTransactions extends Fragment {
                                 arrayOfItems.add(new ListData(jOb));
                             }
                             Collections.reverse(arrayOfItems);
-                            myAdapter = new ProviderTransactionsAdapter(arrayOfItems);
+                            myAdapter = new ProviderTransactionsAdapter(arrayOfItems,getActivity());
                             myRecyclerView.setAdapter(myAdapter);
                         } catch (JSONException e) {
                             e.printStackTrace();

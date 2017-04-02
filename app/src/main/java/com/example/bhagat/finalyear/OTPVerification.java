@@ -49,7 +49,7 @@ public class OTPVerification extends AppCompatActivity {
         inputOtp = (EditText) findViewById(R.id.inputOtp);
         submit = (Button) findViewById(R.id.btn_verify_otp);
         resendOTP = (Button) findViewById(R.id.resend_otp);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        //progressBar = (ProgressBar) findViewById(R.id.progressBar);
         //txtEditMobile = (TextView) findViewById(R.id.txt_edit_mobile);
         //layoutEditMobile = (LinearLayout) findViewById(R.id.layout_edit_mobile);
 

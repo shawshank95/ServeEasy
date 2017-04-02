@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -185,7 +186,7 @@ public class MakeRequest extends AppCompatActivity {
                             JSONObject jOb = new JSONObject(response);
                             jArr = jOb.getJSONArray("category_list");
                             for(int i=0; i<jArr.length(); i++){
-                                categoryArrayList.add(jArr.getJSONObject(i).getString("category_name"));
+                                categoryArrayList.add(jArr.getJSONObject(i).getString("category_name") + " - Rs "+jArr.getJSONObject(i).getString("category_price"));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

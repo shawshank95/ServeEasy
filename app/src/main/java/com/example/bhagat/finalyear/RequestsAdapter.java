@@ -7,7 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
+
 import org.json.JSONException;
 
 import java.util.List;
@@ -20,6 +25,7 @@ public class RequestsAdapter extends ArrayAdapter<ListData> {
     LayoutInflater mInflater;
     List<ListData> listOfItems;
     private SparseBooleanArray mSelectedItemsIds;
+    ColorGenerator generator; // or use DEFAULT
 
     public RequestsAdapter(Context context, int resource, List<ListData> listOfItems) {
         super(context, resource, listOfItems);
@@ -37,12 +43,18 @@ public class RequestsAdapter extends ArrayAdapter<ListData> {
         if (listOfItems == null) {
             Log.d("NULL", "0");
         } else {
+            ImageView letterImage = (ImageView) convertView.findViewById(R.id.letter_image);
             TextView consumerName = (TextView) convertView.findViewById(R.id.consumer);
             TextView categoryName = (TextView) convertView.findViewById(R.id.category);
             //todo: distance is to be calculated (Eucledean/distance-matrix)
             TextView distance = (TextView) convertView.findViewById(R.id.distance);
             TextView quantity = (TextView) convertView.findViewById(R.id.quantity);
+            generator =   ColorGenerator.MATERIAL;
             try {
+                String firstLetter = listOfItems.get(position).jOb.getString("consumer_name").charAt(0)+"";
+                int color = generator.getRandomColor();
+                TextDrawable drawable = TextDrawable.builder().beginConfig().width(40).height(40).endConfig().buildRoundRect(firstLetter.toUpperCase(),color,4);
+                letterImage.setImageDrawable(drawable);
                 consumerName.setText(listOfItems.get(position).jOb.getString("consumer_name"));
                 categoryName.setText(listOfItems.get(position).jOb.getString("category_name"));
                 quantity.setText("Qty: " + listOfItems.get(position).jOb.getString("quantity"));

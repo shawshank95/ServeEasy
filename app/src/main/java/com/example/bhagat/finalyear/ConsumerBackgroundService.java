@@ -65,7 +65,7 @@ public class ConsumerBackgroundService extends Service {
         notification.setSound(sound);
 
         notification.setContentTitle(categoryName);
-        notification.setContentText("Your following request has been accepted by the provder:" + consumerName+" requested for "+quantity+" "+categoryName);
+        notification.setContentText("Your request has been accepted");// by the provder");// + consumerName+" requested for "+quantity+" "+categoryName);
         Intent intent = new Intent(this, NearbyServices.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         notification.setContentIntent(pendingIntent);
