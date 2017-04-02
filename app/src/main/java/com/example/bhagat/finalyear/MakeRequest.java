@@ -83,7 +83,7 @@ public class MakeRequest extends AppCompatActivity {
         serviceName.setText(serviceNameVal);
         providerPhno.setText(providerPhnoVal);
 
-        Toast.makeText(this,serviceIdVal +"",Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,serviceIdVal +"",Toast.LENGTH_LONG).show();
 
         submit  = (CardView) findViewById(R.id.submit_button);
         callButton = (FloatingActionButton) findViewById(R.id.call_button);
@@ -92,7 +92,7 @@ public class MakeRequest extends AppCompatActivity {
 
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
-        Toast.makeText(this,"date" + date,Toast.LENGTH_LONG).show();
+       // Toast.makeText(this,"date" + date,Toast.LENGTH_LONG).show();
 
         //set current date
         java.util.Calendar calendar = java.util.Calendar.getInstance();
@@ -101,9 +101,9 @@ public class MakeRequest extends AppCompatActivity {
         day = calendar.get(java.util.Calendar.DAY_OF_MONTH);
 
 
-        dueDay = day;
-        dueMonth = month;
-        dueYear = year;
+        //dueDay = day;
+        //dueMonth = month;
+        //dueYear = year;
 
 
         //call
@@ -135,7 +135,15 @@ public class MakeRequest extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                submitRequst();
+                if(dueDay == 0) {
+                    Toast.makeText(MakeRequest.this, "Please select due date", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(address.getText().toString().trim().length() == 0) {
+                    Toast.makeText(MakeRequest.this, "Please enter address", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                submitRequest();
             }
         });
     }
@@ -177,7 +185,7 @@ public class MakeRequest extends AppCompatActivity {
                 url, new VolleyNetworkManager.Callback() {
                     @Override
                     public void onSuccess(String response) {
-                        Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
                         Log.d("Spinner Response", response);
 
                         ArrayList<String> categoryArrayList = new ArrayList<>();
@@ -218,7 +226,7 @@ public class MakeRequest extends AppCompatActivity {
                 });
     }
 
-    public  void  submitRequst() {
+    public  void  submitRequest() {
 
         String url = UserDetails.getInstance().url+"make_request.php";
 
@@ -244,13 +252,16 @@ public class MakeRequest extends AppCompatActivity {
 
 
 
-
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
         VolleyNetworkManager.getInstance(getApplicationContext()).makeRequest(params,
                 url, new VolleyNetworkManager.Callback() {
                     @Override
                     public void onSuccess(String response) {
                         Log.d("Response123", response);
-                        //Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
+                        pDialog.hide();
+                        Toast.makeText(getApplicationContext(),"Request made successfully.",Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getApplicationContext(),ConsumerHome.class);
                         startActivity(intent);
                         finish();
@@ -258,10 +269,17 @@ public class MakeRequest extends AppCompatActivity {
                     }
                     @Override
                     public void onError(String error) {
+                        pDialog.hide();
                         Toast.makeText(getApplicationContext(),error,Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(getApplicationContext(),ConsumerHome.class);
+        startActivity(intent);
+        finish();
+    }
 }

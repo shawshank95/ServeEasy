@@ -1,5 +1,6 @@
 package com.example.bhagat.finalyear;
 
+import android.app.ProgressDialog;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -57,6 +58,9 @@ public class ProviderTransactions extends Fragment {
     }
 
     void getDataSet() {
+        final ProgressDialog pDialog = new ProgressDialog(getActivity());
+        pDialog.setMessage("Loading...");
+        pDialog.show();
         Map<String, String> params = new HashMap<>();
         params.put("provider_id",UserDetails.getInstance().providerId);
         String url = UserDetails.getInstance().url + "fetch_provider_transactions.php";
@@ -64,6 +68,7 @@ public class ProviderTransactions extends Fragment {
                 url, new VolleyNetworkManager.Callback() {
                     @Override
                     public void onSuccess(String response) {
+                        pDialog.hide();
                         Log.d("ProviderTransactions", response);
                         try {
                             JSONArray jsonArray = new JSONArray(response);
@@ -80,6 +85,7 @@ public class ProviderTransactions extends Fragment {
                     }
                     @Override
                     public void onError(String error) {
+                        pDialog.hide();
                         Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
                     }
                 });

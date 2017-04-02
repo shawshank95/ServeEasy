@@ -150,7 +150,7 @@ public class ProviderBackgroundService extends Service {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                         Log.d("fetch_requests error",error.toString());
                     }
                 }
@@ -197,7 +197,7 @@ public class ProviderBackgroundService extends Service {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                         Log.d("markRequestSeen error",error.toString());
                     }
                 }

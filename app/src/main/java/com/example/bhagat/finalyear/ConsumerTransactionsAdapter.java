@@ -43,8 +43,8 @@ public class ConsumerTransactionsAdapter extends RecyclerView.Adapter<ConsumerTr
         try {
             holder.providerName.setText(arrayOfItems.get(position).jOb.getString("provider_name"));
             holder.categoryName.setText(arrayOfItems.get(position).jOb.getString("category_name"));
-            holder.quantity.setText("Quantity: "+ arrayOfItems.get(position).jOb.getString("quantity"));
-            holder.date.setText("Ordered: " + arrayOfItems.get(position).jOb.getString("date"));
+            holder.quantity.setText("Qty: "+ arrayOfItems.get(position).jOb.getString("quantity"));
+            holder.date.setText( arrayOfItems.get(position).jOb.getString("date"));
 
 // pending accepted delivered cancelled
             //setting status image

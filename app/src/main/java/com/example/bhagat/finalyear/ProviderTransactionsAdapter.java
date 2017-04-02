@@ -101,7 +101,7 @@ public class ProviderTransactionsAdapter extends RecyclerView
         }
         @Override
         public void onClick(View v) {
-            myClickListener.onItemClick(getAdapterPosition(), v);
+//            myClickListener.onItemClick(getAdapterPosition(), v);
         }
     }
 

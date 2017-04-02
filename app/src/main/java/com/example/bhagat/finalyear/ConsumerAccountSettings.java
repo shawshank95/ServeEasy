@@ -1,5 +1,6 @@
 package com.example.bhagat.finalyear;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -88,20 +89,25 @@ public class ConsumerAccountSettings extends Fragment {
     }
     public void updateRadialDistance(String radialDistance){
         Map<String, String> params = new HashMap<>();
-        Toast.makeText(getActivity(),UserDetails.getInstance().userId,Toast.LENGTH_LONG).show();
+        //Toast.makeText(getActivity(),UserDetails.getInstance().userId,Toast.LENGTH_LONG).show();
         Log.d("USERID",UserDetails.getInstance().userId);
         params.put("consumer_id", UserDetails.getInstance().userId);
         params.put("radial_distance", radialDistance);
         String url = UserDetails.getInstance().url + "update_radial_distance.php";
+        final ProgressDialog pDialog = new ProgressDialog(getActivity());
+        pDialog.setMessage("Loading...");
+        pDialog.show();
         VolleyNetworkManager.getInstance(getContext()).makeRequest(params,
                 url, new VolleyNetworkManager.Callback() {
                     @Override
                     public void onSuccess(String response) {
                         Log.d("RESPONSE12", response);
+                        pDialog.hide();
                     }
                     @Override
                     public void onError(String error) {
                         Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
+                        pDialog.hide();
                     }
                 });
     }

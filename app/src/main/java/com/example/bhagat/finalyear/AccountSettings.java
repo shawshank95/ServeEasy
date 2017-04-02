@@ -58,7 +58,6 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
     LinearLayout container;
     EditText service_name, categoryPrice;
     TextView tvcategoryName;
-    ProgressDialog pDialog;
     static String SERVICE_NAME = "";
     double latitude,longitude;
 
@@ -95,21 +94,29 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
         updateLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final ProgressDialog pDialog = new ProgressDialog(getActivity());
+                pDialog.setMessage("Loading...");
+                pDialog.show();
                 Map<String, String> params = new HashMap<>();
                 params.put("provider_id", UserDetails.getInstance().providerId);
                 params.put("loc_x", latitude+"");
                 params.put("loc_y", longitude+"");
-                Toast.makeText(getActivity(),latitude +" "+longitude,Toast.LENGTH_LONG).show();
+
                 String url = UserDetails.getInstance().url + "update_location.php";
                 VolleyNetworkManager.getInstance(getContext()).makeRequest(params,
                         url, new VolleyNetworkManager.Callback() {
                             @Override
                             public void onSuccess(String response) {
+                                pDialog.dismiss();
+                                Toast.makeText(getActivity(),"Current Location Updated",Toast.LENGTH_LONG).show();
                                 Log.d("RESPONSE", response);
+
                             }
                             @Override
                             public void onError(String error) {
+                                pDialog.dismiss();
                                 Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
+
                             }
                         });
             }
@@ -160,6 +167,10 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
         });
     }
     public void postRequest() {
+
+        final ProgressDialog pDialog = new ProgressDialog(getActivity());
+        pDialog.setMessage("Loading...");
+        pDialog.show();
         Map<String, String> params = new HashMap<>();
         params.put("providerID", UserDetails.getInstance().providerId);
         params.put("serviceName", SERVICE_NAME);
@@ -176,6 +187,7 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
                     @Override
                     public void onSuccess(String response) {
                         Log.d("RESPONSE", response);
+                        pDialog.hide();
                         if(response.equals("success")){
                             Toast.makeText(getActivity(),"Details saved successfully",Toast.LENGTH_LONG).show();
                         }
@@ -183,11 +195,15 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
 
                     @Override
                     public void onError(String error) {
+                        pDialog.hide();
                         Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
                     }
                 });
     }
     public void getProviderServices(){
+        final ProgressDialog pDialog = new ProgressDialog(getActivity());
+        pDialog.setMessage("Loading...");
+        pDialog.show();
         Map<String,String> params = new HashMap<>();
         params.put("provider_id",UserDetails.getInstance().providerId);
         String url = UserDetails.getInstance().url + "get_provider_services.php";
@@ -195,8 +211,10 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
                 url, new VolleyNetworkManager.Callback() {
                     @Override
                     public void onSuccess(String response) {
+                        pDialog.hide();
                         if(response != null){
                             try {
+
                                 JSONArray jsonArray = new JSONArray(response);
                                 JSONObject jOb1 = jsonArray.getJSONObject(0);
                                 String provider_service_name = jOb1.getString("service_name");
@@ -207,7 +225,7 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
                                     Log.d("categoryDetails0",jOb2.length()+"");
                                     Log.d("categoryDetails1",jOb2.getString("price1"));
                                     for(int i = 1 ; i <= jOb2.length()/2;i++){
-                                        Log.d("categoryDetails4","haha");
+                                        //Log.d("categoryDetails4","haha");
                                         categoryDetails.add(Pair.create(jOb2.getString("cat" + i), jOb2.getString("price" + i)));
                                         Log.d("categoryDetails2",jOb2.getString("price"+i));
                                         Log.d("categoryDetails3",categoryDetails.get(i-1).first + " " + categoryDetails.get(i-1).second );
@@ -231,16 +249,18 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
                                         });
                                         container.addView(addView);
                                     }
+
                                 }
                             }
                             catch (Exception e){
-
+                                pDialog.hide();
                             }
                         }
                     }
                     @Override
                     public void onError(String error) {
                         Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
+                        pDialog.hide();
                     }
                 });
     }

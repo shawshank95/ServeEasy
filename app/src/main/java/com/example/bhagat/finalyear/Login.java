@@ -122,26 +122,24 @@ public class Login extends AppCompatActivity {
                 if(color == Color.WHITE){
                     isProvider = true;
                 }
+                else{
+                    isProvider = false;
+                }
                 if (mobileNo.getText().toString().length() == 0 || password.getText().toString().length() == 0) {
                     if (mobileNo.length() == 0) {
-                        Toast.makeText(Login.this, "Please anim_slide_in_right your mobile no", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Login.this, "Please enter your mobile no", Toast.LENGTH_LONG).show();
                     } else if (password.length() == 0) {
-                        Toast.makeText(Login.this, "Please anim_slide_in_right your password", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Login.this, "Please enter your password", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     loginClicked();
-                    if (logInSuccessful) {
-
-                    } else {
-                        Toast.makeText(Login.this, "Sorry invalid username or password. Please try again.", Toast.LENGTH_LONG);
-                    }
                 }
             }
         });
     }
 
     public void loginClicked() {
-        String url = "http://192.168.109.41/login.php";
+        String url = UserDetails.getInstance().url+"login.php";
         com.android.volley.RequestQueue queue = Volley.newRequestQueue(this);
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("Logging in...");
@@ -150,8 +148,8 @@ public class Login extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        pDialog.dismiss();
-                        Log.d("login response", response);
+                        pDialog.hide();
+                        Log.d("login_response", response);
                         try {
                             JSONArray jsonArray = new JSONArray(response);
                             if(jsonArray.length() == 0){
@@ -202,7 +200,7 @@ public class Login extends AppCompatActivity {
                                         userType = "consumer";
                                     }
                                     logInSuccessful = true;
-                                    Toast.makeText(Login.this, "Login credentials correct" + UserDetails.getInstance().consumerId, Toast.LENGTH_LONG).show();
+                                   // Toast.makeText(Login.this, "Login credentials correct" + UserDetails.getInstance().consumerId, Toast.LENGTH_LONG).show();
                                     editor.putBoolean("loggedin", true);
                                     editor.commit();
                                     if (userType.equals("provider")) {
@@ -235,6 +233,7 @@ public class Login extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("user_type", (isProvider)? "provider" : "consumer");
+                Log.d("loginType", isProvider+"");
                 params.put("mobile_no", mobileNo.getText().toString());
                 params.put("password", password.getText().toString());
                 return params;

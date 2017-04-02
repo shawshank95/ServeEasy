@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -74,7 +75,7 @@ public class RequestDetails extends DialogFragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.request_details, null);
-
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         accept = (Button) view.findViewById(R.id.accept);
         decline = (Button) view.findViewById(R.id.decline);
         accept.setOnClickListener(this);
@@ -104,7 +105,7 @@ public class RequestDetails extends DialogFragment implements View.OnClickListen
         ((TextView) view.findViewById(R.id.category) ).setText(categoryName);
         ((TextView) view.findViewById(R.id.quantity) ).setText(quantity);
         ((TextView) view.findViewById(R.id.consumer_phno)).setText(phno);
-        ((TextView) view.findViewById(R.id.due_date)).setText(dueDate);
+        ((TextView) view.findViewById(R.id.due_date)).setText("Due date: " + dueDate);
         //to remove dialog when click outside of it
             //setCancelable(true);
         return view;
