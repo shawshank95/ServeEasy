@@ -50,16 +50,16 @@ public class ConsumerTransactionsAdapter extends RecyclerView.Adapter<ConsumerTr
             //setting status image
             String requestStatus = arrayOfItems.get(position).jOb.getString("status");
             if(requestStatus.equals("pending")){
-                holder.status.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.processing));
+                holder.status.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.yellow_processing));
             }
             else if(requestStatus.equals("accepted")){
-                holder.status.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.checked));
+                holder.status.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.yellow_checked));
             }
             else if(requestStatus.equals("delivered")){
-                holder.status.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.delivered));
+                holder.status.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.green_tick));
             }
             else if(requestStatus.equals("cancelled")){
-                holder.status.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.cancel));
+                holder.status.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.red_cross));
             }
 
             Log.d("transactions_quant", arrayOfItems.get(position).jOb.getString("quantity"));
