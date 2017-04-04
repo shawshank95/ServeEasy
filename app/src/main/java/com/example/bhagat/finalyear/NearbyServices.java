@@ -70,7 +70,7 @@ public class NearbyServices extends Fragment implements ActivityCompat.OnRequest
         arrayOfItems = new ArrayList<>();
 
         getLocation();
-        getServices();
+
         requestsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -108,32 +108,26 @@ public class NearbyServices extends Fragment implements ActivityCompat.OnRequest
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if ( ContextCompat.checkSelfPermission( getActivity(), Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            getServices();
+            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), true));
+            if (location != null) {
+                onLocationChanged(location);
+            }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE,
+                    locationListener );
         }
         else{
             if (ContextCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                        Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION},200);
-                } else {
-                    ActivityCompat.requestPermissions(getActivity(),
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-                }
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},200);
             }
         }
-        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), true));
-        if (location != null) {
-            onLocationChanged(location);
-        }
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            ;
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE,
-                locationListener );
+
     }
+
+
+
 
 
     ///volley
@@ -175,15 +169,28 @@ public class NearbyServices extends Fragment implements ActivityCompat.OnRequest
                 });
     }
 
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == 1) {
-            if (permissions.length == 1 &&
-                    permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            } else {
-                Toast.makeText(getActivity(),"Permission denied",Toast.LENGTH_LONG).show();
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 200: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getServices();
+                    Log.d("permission","granted");
+                    // permission was granted, yay! do the
+                    // calendar task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
             }
+
+            // other 'switch' lines to check for other
+            // permissions this app might request
         }
     }
 
