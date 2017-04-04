@@ -1,15 +1,21 @@
 package com.example.bhagat.finalyear;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -104,8 +110,36 @@ public class RequestDetails extends DialogFragment implements View.OnClickListen
         ((TextView) view.findViewById(R.id.customerAddress) ).setText(address);
         ((TextView) view.findViewById(R.id.category) ).setText(categoryName);
         ((TextView) view.findViewById(R.id.quantity) ).setText(quantity);
-        ((TextView) view.findViewById(R.id.consumer_phno)).setText(phno);
         ((TextView) view.findViewById(R.id.due_date)).setText("Due date: " + dueDate);
+
+        TextView phoneNo = (TextView) view.findViewById(R.id.consumer_phno);
+        phoneNo.setText(phno);
+
+        phoneNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String phoneNumber = "tel:"+phno;
+                Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse(phoneNumber));
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    Log.d("Call permission", "denied");
+                    return;
+                }
+                if (ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    // Should we show an explanation?
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                            Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION},200);
+                    } else {
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+                    }
+                }
+                Log.d("Call", "success");
+                startActivity(callIntent);
+            }
+        });
         //to remove dialog when click outside of it
             //setCancelable(true);
         return view;

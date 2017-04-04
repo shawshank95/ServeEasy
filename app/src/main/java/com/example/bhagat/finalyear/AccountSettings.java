@@ -90,13 +90,12 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
         getProviderServices();
         categoryDetails.clear();
 
-
+        final ProgressDialog pDialog = new ProgressDialog(getActivity());
+        pDialog.setMessage("Loading...");
+        pDialog.show();
         updateLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ProgressDialog pDialog = new ProgressDialog(getActivity());
-                pDialog.setMessage("Loading...");
-                pDialog.show();
                 Map<String, String> params = new HashMap<>();
                 params.put("provider_id", UserDetails.getInstance().providerId);
                 params.put("loc_x", latitude+"");
@@ -211,10 +210,9 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
                 url, new VolleyNetworkManager.Callback() {
                     @Override
                     public void onSuccess(String response) {
-                        pDialog.hide();
                         if(response != null){
                             try {
-
+                                pDialog.hide();
                                 JSONArray jsonArray = new JSONArray(response);
                                 JSONObject jOb1 = jsonArray.getJSONObject(0);
                                 String provider_service_name = jOb1.getString("service_name");

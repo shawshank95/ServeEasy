@@ -8,6 +8,7 @@ public class UserDetails {
     }
     private static UserDetails ourInstance = new UserDetails();
     public String url = "http://54.190.31.30/ServeEasyPHP/";
+    //public String url = "http://192.168.109.41/ServeEasy/ServeEasyPHP";
     public String consumerId = "123";
     public String providerId = "500";
     public String userName = "Bhaskar";

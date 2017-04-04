@@ -99,7 +99,7 @@ public class ConsumerTransactions extends Fragment {
 
     void getDataSet() {
         Map<String, String> params = new HashMap<>();
-        params.put("consumer_id",UserDetails.getInstance().consumerId);
+        params.put("consumer_id",UserDetails.getInstance().userId);
       //  Toast.makeText(getActivity(),UserDetails.getInstance().consumerId+"",Toast.LENGTH_LONG).show();
         final ProgressDialog pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage("Loading...");

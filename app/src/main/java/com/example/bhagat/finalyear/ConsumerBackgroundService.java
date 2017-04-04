@@ -61,7 +61,7 @@ public class ConsumerBackgroundService extends Service {
         notification.setTicker("New request");
         notification.setWhen(System.currentTimeMillis());
 
-        Uri sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification_sound);
+        Uri sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.freeze_sound);
         notification.setSound(sound);
 
         notification.setContentTitle(categoryName);
@@ -81,10 +81,10 @@ public class ConsumerBackgroundService extends Service {
         notification.setSmallIcon(R.drawable.person);
         notification.setTicker("New request");
         notification.setWhen(System.currentTimeMillis());
-        Uri sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification_sound);
+        Uri sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.freeze_sound);
         notification.setSound(sound);
         notification.setContentTitle(categoryName);
-        notification.setContentText("Sorry your following request has been cancelled by the provder:" + "You requested for "+quantity+" "+categoryName);
+        notification.setContentText("Sorry your request has been cancelled by the provder:" + "You requested for "+quantity+" "+categoryName);
 
         Intent intent = new Intent(this, NearbyServices.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -184,7 +184,8 @@ public class ConsumerBackgroundService extends Service {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("consumer_id", UserDetails.getInstance().consumerId);
+                Log.d("ConsumerServiceResponse",UserDetails.getInstance().userId);
+                params.put("consumer_id", UserDetails.getInstance().userId);
                 return params;
             }
         } ;
@@ -236,7 +237,7 @@ public class ConsumerBackgroundService extends Service {
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("request_id",requestID);
                 params.put("seen_val",(Integer.parseInt(seenVal) + 1) + "");
                 return params;

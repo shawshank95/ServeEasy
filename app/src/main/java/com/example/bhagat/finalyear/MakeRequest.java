@@ -5,10 +5,14 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -72,12 +76,12 @@ public class MakeRequest extends AppCompatActivity {
         serviceNameVal = getIntent().getStringExtra("serviceName");
         providerPhnoVal = getIntent().getStringExtra("providerPhno");
 
-        selectDate = (TextView)findViewById(R.id.select_date);
-        providerName = (TextView)findViewById(R.id.provider_name);
-        serviceName = (TextView)findViewById(R.id.service_name);
-        providerPhno = (TextView)findViewById(R.id.provider_phno);
-        quantity = (EditText)findViewById(R.id.quantity);
-        address = (EditText)findViewById(R.id.address);
+        selectDate = (TextView) findViewById(R.id.select_date);
+        providerName = (TextView) findViewById(R.id.provider_name);
+        serviceName = (TextView) findViewById(R.id.service_name);
+        providerPhno = (TextView) findViewById(R.id.provider_phno);
+        quantity = (EditText) findViewById(R.id.quantity);
+        address = (EditText) findViewById(R.id.address);
 
         providerName.setText(providerNameVal);
         serviceName.setText(serviceNameVal);
@@ -85,14 +89,14 @@ public class MakeRequest extends AppCompatActivity {
 
         //Toast.makeText(this,serviceIdVal +"",Toast.LENGTH_LONG).show();
 
-        submit  = (CardView) findViewById(R.id.submit_button);
+        submit = (CardView) findViewById(R.id.submit_button);
         callButton = (FloatingActionButton) findViewById(R.id.call_button);
         dueDate = (ImageView) findViewById(R.id.pick_date_button);
         selectCategory = (Spinner) findViewById(R.id.select_category);
 
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
-       // Toast.makeText(this,"date" + date,Toast.LENGTH_LONG).show();
+        // Toast.makeText(this,"date" + date,Toast.LENGTH_LONG).show();
 
         //set current date
         java.util.Calendar calendar = java.util.Calendar.getInstance();
@@ -110,16 +114,15 @@ public class MakeRequest extends AppCompatActivity {
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String phoneNumber = "tel:"+providerPhnoVal;
-                Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse(phoneNumber));
-                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    Log.d("Call permission", "denied");
-                    return;
+
+                if (isPermissionGranted()) {
+                    call_action();
                 }
-                Log.d("Call", "success");
-                startActivity(callIntent);
             }
         });
+
+
+
         //set date
         dueDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +151,24 @@ public class MakeRequest extends AppCompatActivity {
         });
     }
 
+    public  boolean isPermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.CALL_PHONE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v("TAG","Permission is granted");
+                return true;
+            } else {
+
+                Log.v("TAG","Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v("TAG","Permission is granted");
+            return true;
+        }
+    }
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -281,5 +302,37 @@ public class MakeRequest extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(),ConsumerHome.class);
         startActivity(intent);
         finish();
+    }
+
+    public void call_action(){
+        //String phnum = etPhoneno.getText().toString();
+        String phno = "tel:" + providerPhnoVal;
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse(phno));
+        try {
+            startActivity(callIntent);
+        }catch (Exception e){
+            Log.d("Permission denied",e.getMessage());
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+
+            case 1: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(), "Permission granted", Toast.LENGTH_SHORT).show();
+                    call_action();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 }

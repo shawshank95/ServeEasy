@@ -113,12 +113,10 @@ public class PendingRequests extends Fragment implements RequestDetails.RequestD
         args.putString("dueDate", dueDate);
         args.putInt("listItemPosition", position);
 
-
         RequestDetails details = RequestDetails.newInstance();
         details.setTargetFragment(this, 0);
         details.setArguments(args);
         details.show(fm,"pendingDialogTag");
-
     }
 
 

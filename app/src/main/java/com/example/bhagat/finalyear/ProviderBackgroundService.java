@@ -66,7 +66,7 @@ public class ProviderBackgroundService extends Service {
         notification.setWhen(System.currentTimeMillis());
         notification.setContentTitle(categoryName);
         notification.setContentText(consumerName+" requested for "+quantity+" "+categoryName);
-        Uri sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification_sound);
+        Uri sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.freeze_sound);
         notification.setSound(sound);
         Intent intent = new Intent(this, ProviderHome.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -160,7 +160,7 @@ public class ProviderBackgroundService extends Service {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("provider_id", UserDetails.getInstance().providerId);
+                params.put("provider_id", UserDetails.getInstance().userId);
                 return params;
             }
         } ;

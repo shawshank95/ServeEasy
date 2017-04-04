@@ -103,13 +103,25 @@ public class Login extends AppCompatActivity {
 
         /*This is used to keep the user logged in when the next time the user opens the app*/
         if (loggdedIn) {
-            editor.putString("username",UserDetails.getInstance().userName);
+            //editor.putString("username",UserDetails.getInstance().userName);
+            //editor.commit();
+
             UserDetails.getInstance().userId = sp.getString("userId","0");
+            UserDetails.getInstance().providerId = sp.getString("userId","0");
+            UserDetails.getInstance().consumerId= sp.getString("userId","0");
+
             String userType = sp.getString("userType","guest");
+            UserDetails.getInstance().userName = sp.getString("username","guest");
+
+
+
             if (userType.equals("provider")) {
+
                 startActivity(new Intent(this, ProviderHome.class));
+
             } else {
                 startActivity(new Intent(this, ConsumerHome.class));
+
             }
             finish();
         }
@@ -206,6 +218,27 @@ public class Login extends AppCompatActivity {
                                     if (userType.equals("provider")) {
                                         editor.putString("userType", "provider");
                                         editor.commit();
+
+                            ///////Take provider to fill account details is user is new
+                                        Intent previousIntent = getIntent();
+                                        //Log.d("LoginProvider",previousIntent.getStringExtra("isNewUser").equals("true")+"");
+                                        try {
+                                            if (previousIntent.getStringExtra("isNewUser").equals("true")) {
+                                                Log.d("LoginProvider", "entered");
+                                                Intent intent = new Intent(Login.this,ProviderHome.class);
+                                                intent.putExtra("isNewUser","true");
+                                                startActivity(intent);
+                                                Log.d("LoginProvider", "finish about to call and moving to Account Settings");
+                                                finish();
+                                            }
+                                            else
+                                                Log.d("LoginProvider","Problem");
+
+                                        }
+                                        catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+                                        Log.d("LoginProvider","ProviderHomeCalling");
                                         startActivity(new Intent(Login.this, ProviderHome.class));
                                     } else {
                                         editor.putString("userType", "consumer");
@@ -217,6 +250,7 @@ public class Login extends AppCompatActivity {
                             }
                         } catch (Exception e) {
                             Log.d("login json error", e.getMessage());
+                            Toast.makeText(Login.this,"error please try again",Toast.LENGTH_SHORT).show();
                         }
                     }
                 },

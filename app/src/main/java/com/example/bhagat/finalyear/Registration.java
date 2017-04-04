@@ -216,6 +216,7 @@ public class Registration extends AppCompatActivity {
         Intent i = new Intent(Registration.this,OTPVerification.class);
         i.putExtra("registrationDetailsBundle",bundle);
         startActivity(i);
+        finish();
     }
 
 

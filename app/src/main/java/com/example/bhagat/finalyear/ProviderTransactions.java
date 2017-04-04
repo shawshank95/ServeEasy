@@ -62,7 +62,7 @@ public class ProviderTransactions extends Fragment {
         pDialog.setMessage("Loading...");
         pDialog.show();
         Map<String, String> params = new HashMap<>();
-        params.put("provider_id",UserDetails.getInstance().providerId);
+        params.put("provider_id",UserDetails.getInstance().userId);
         String url = UserDetails.getInstance().url + "fetch_provider_transactions.php";
         VolleyNetworkManager.getInstance(getContext()).makeRequest(params,
                 url, new VolleyNetworkManager.Callback() {

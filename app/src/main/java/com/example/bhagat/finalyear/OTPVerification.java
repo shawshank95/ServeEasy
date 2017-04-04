@@ -35,8 +35,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class OTPVerification extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback,LocationListener{
     private ViewPagerAdapter adapter;
@@ -121,7 +123,7 @@ public class OTPVerification extends AppCompatActivity implements ActivityCompat
 
     void sendOTP(){
 
-        OTP = (mobileNo.hashCode()+"").substring(0,4);
+        OTP = (int)(Math.random()*9000)+1000+"";
         Log.d("OTP",OTP);
         /*final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -223,7 +225,9 @@ public class OTPVerification extends AppCompatActivity implements ActivityCompat
                     public void onSuccess(String response) {
                         Log.d("registration response", response);
                         Toast.makeText(getApplicationContext(), "Registration Successful", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(OTPVerification.this, Login.class));
+                        Intent i = new Intent(OTPVerification.this, Login.class);
+                        i.putExtra("isNewUser","true");
+                        startActivity(i);
                         finish();
                     }
 
