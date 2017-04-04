@@ -51,6 +51,7 @@ public class ConsumerBackgroundService extends Service {
 
         notification = new NotificationCompat.Builder(this);
         notification.setAutoCancel(true);
+
         notificationID = 1;
     }
 
@@ -91,7 +92,9 @@ public class ConsumerBackgroundService extends Service {
         notification.setContentIntent(pendingIntent);
         //Builds notification and issues it
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        nm.notify(notificationID, notification.build());
+
+
+        // nm.notify(notificationID, notification.build());
     }
 
 
@@ -103,7 +106,8 @@ public class ConsumerBackgroundService extends Service {
             backgroundService.start();
             isRunning = true;
         }
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;//super.onStartCommand(intent, flags, startId);
+        //return super.onStartCommand(intent, flags, startId);
     }
 
 

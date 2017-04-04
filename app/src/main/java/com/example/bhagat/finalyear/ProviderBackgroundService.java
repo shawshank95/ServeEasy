@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -86,7 +87,8 @@ public class ProviderBackgroundService extends Service {
             backgroundService.start();
             isRunning = true;
         }
-        return super.onStartCommand(intent, flags, startId);
+
+        return START_STICKY;//super.onStartCommand(intent, flags, startId);
     }
 
 

@@ -118,7 +118,7 @@ public class ConsumerHome extends AppCompatActivity{
         });
         try {
             //temporary service testing
-            startService(new Intent(this, ConsumerBackgroundService.class));
+            this.startService(new Intent(this, ConsumerBackgroundService.class));
         }
         catch (Exception e) {
             Log.e("startService",e.toString());

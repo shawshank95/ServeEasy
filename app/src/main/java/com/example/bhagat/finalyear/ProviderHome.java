@@ -158,7 +158,7 @@ public class ProviderHome extends AppCompatActivity {
         });
         try {
             //temporary service testing
-            startService(new Intent(this, ProviderBackgroundService.class));
+            this.startService(new Intent(this, ProviderBackgroundService.class));
         }
         catch (Exception e) {
             Log.e("startService",e.toString());

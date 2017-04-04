@@ -200,9 +200,9 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
                 });
     }
     public void getProviderServices(){
-        final ProgressDialog pDialog = new ProgressDialog(getActivity());
-        pDialog.setMessage("Loading...");
-        pDialog.show();
+        //final ProgressDialog pDialog = new ProgressDialog(getActivity());
+        //pDialog.setMessage("Loading...");
+        //pDialog.show();
         Map<String,String> params = new HashMap<>();
         params.put("provider_id",UserDetails.getInstance().providerId);
         String url = UserDetails.getInstance().url + "get_provider_services.php";
@@ -212,7 +212,7 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
                     public void onSuccess(String response) {
                         if(response != null){
                             try {
-                                pDialog.hide();
+                                //pDialog.hide();
                                 JSONArray jsonArray = new JSONArray(response);
                                 JSONObject jOb1 = jsonArray.getJSONObject(0);
                                 String provider_service_name = jOb1.getString("service_name");
@@ -251,14 +251,14 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
                                 }
                             }
                             catch (Exception e){
-                                pDialog.hide();
+                                //pDialog.hide();
                             }
                         }
                     }
                     @Override
                     public void onError(String error) {
                         Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
-                        pDialog.hide();
+                        //pDialog.hide();
                     }
                 });
     }
@@ -281,6 +281,23 @@ public class AccountSettings extends Fragment implements ActivityCompat.OnReques
 
     void getLocation(){
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if ( ContextCompat.checkSelfPermission( getActivity(), Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
+        else{
+            if (ContextCompat.checkSelfPermission(getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION},200);
+                } else {
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+                }
+            }
+        }
         Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(),
                 true));
         if (location != null) {
